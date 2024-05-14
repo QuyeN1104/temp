@@ -11,11 +11,14 @@ CONFIG += c++17
 SOURCES += \
     course.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    staff.cpp
 
 HEADERS += \
     course.h \
-    mainwindow.h
+    library.h \
+    mainwindow.h \
+    staff.h
 
 FORMS += \
     mainwindow.ui
