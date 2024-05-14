@@ -3,24 +3,14 @@
 #include"course.h"
   class Staff{
     private:
-        void change_idCourse(Course &x,string newIdCourse){
-            x.idCourse = newIdCourse;
-        }
-        void change_nameCourse(Course &x,string newNameCourse){
-            x.nameCourse = newNameCourse;
-        }
-        void change_className(Course &x,string newClassName){
-            x.className = newClassName;
-        }
-        void change_teacherName(Course &x,string newTeacherName){
-            x.teacherName = newTeacherName;
-        }
-        void change_numCredits(Course &x, int newNumCredits){
-            x.numCredits = newNumCredits;
-        }
-        void chang_session(Course &x,string newSession){
-            x.session = newSession;
-        }
+        void change_idCourse(Course &x,string newIdCourse);
+        void change_nameCourse(Course &x,string newNameCourse);
+        void change_className(Course &x,string newClassName);
+        void change_teacherName(Course &x,string newTeacherName);
+        void change_numCredits(Course &x, int newNumCredits);
+        void change_session(Course &x,string newSession);
+        void change_dayofWeek(Course &x,string newDayofWeek);
+        void change_maxStudents(Course &x,int newMaxStudens);
     };
 
 #endif // STAFF_H
