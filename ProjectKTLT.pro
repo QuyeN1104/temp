@@ -10,13 +10,16 @@ CONFIG += c++17
 
 SOURCES += \
     course.cpp \
+    linkedlist_courses.cpp \
     main.cpp \
     mainwindow.cpp \
     staff.cpp
 
 HEADERS += \
     course.h \
+    courseslinkedlist.h        \
     library.h \
+    linkedlist_courses.h \
     mainwindow.h \
     staff.h
 
