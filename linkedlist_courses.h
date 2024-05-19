@@ -8,17 +8,10 @@ struct NodeCourse {
     NodeCourse(Course course);
 };
 
-class LinkedList_Courses
-{
-private:
-    NodeCourse* head;
-
-public:
+struct LinkedList_Courses
+{ 
+    NodeCourse* head, *tail;
     LinkedList_Courses();
-    ~LinkedList_Courses();
-
-    // void insert(Course course);
-    // void display() const;
 };
 
 #endif // LINKEDLIST_COURSES_H

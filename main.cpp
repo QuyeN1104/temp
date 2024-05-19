@@ -1,6 +1,6 @@
 #include "staff.h"
 
-int main(int argc, char *argv[])
+int main()
 {
-
+    cout << "hello";
 }
