@@ -134,3 +134,6 @@ void Staff::deleteClass(LinkedList_Classes& lClasses,Class Class){
         lClasses.tail = pPrev;
     }
 }
+// Class createClass(const string& nameClass){
+//     Class
+// }

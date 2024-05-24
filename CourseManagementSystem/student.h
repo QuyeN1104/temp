@@ -1,6 +1,5 @@
 #ifndef STUDENT_H
 #define STUDENT_H
-#include"library.h"
 #include"course.h"
 class Student
 {

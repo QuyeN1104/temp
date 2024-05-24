@@ -4,9 +4,11 @@
 class Class
 {
 private:
+    string nameClass;
     LinkedList_Students ListStudents;
 public:
     Class();
+    Class(string name);
 };
 struct NodeClass{
     Class data;
