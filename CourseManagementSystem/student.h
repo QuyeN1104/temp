@@ -3,13 +3,20 @@
 #include"course.h"
 class Student
 {
-private:
+// private:
+public:
     LinkedList_Courses enrolledCoures;
     string enrolledclass;
-    string id;
+    string studentID;
+    string no;
+    string firstName;
+    string lastName;
+    string gender;
+    string dateOfBirth;
+    string socialID;
 
 public:
-    Student();
+    Student(string* data);
 };
 struct NodeStudent{
     Student data;
