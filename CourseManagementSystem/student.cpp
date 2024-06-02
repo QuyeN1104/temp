@@ -1,5 +1,5 @@
 #include "student.h"
-
+Student::Student() : no(""), studentID(""), firstName(""), lastName(""), gender(""), dateOfBirth(""), socialID("") {}
 Student::Student(string* data){
     int i = 0;
     this->no = data[i++];

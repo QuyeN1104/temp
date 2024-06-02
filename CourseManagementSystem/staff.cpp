@@ -88,6 +88,7 @@ void Staff::loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string&
     }
     deletePointerData(data,numRows);
 }
+
 NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses lCourses, Course course){
     NodeCourse* pNodeCourse = lCourses.head;
     if(pNodeCourse == NULL) return NULL;
@@ -304,7 +305,11 @@ void Staff::addAfterStudent(LinkedList_Students& lStudents, NodeStudent* pNodeSt
     }
 }
 void Staff::addStudentAtIndex(LinkedList_Students& lStudents, Student student, int index) {
-    NodeStudent* p = getNodeStudentPointer(lStudents, index);
+    if(index == 0){
+        addHeadStudent(lStudents,student);
+        return;
+    }
+    NodeStudent* p = getNodeStudentPointer(lStudents, index - 1);
     addAfterStudent(lStudents, p, student);
 }
 void Staff::deleteStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStudent) {

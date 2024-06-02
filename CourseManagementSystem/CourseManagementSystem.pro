@@ -14,7 +14,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     staff.cpp \
-    student.cpp
+    student.cpp\
+    user.cpp\
+    semester.cpp\
+    schoolyear.cpp\
 
 HEADERS += \
     class.h \
@@ -22,7 +25,10 @@ HEADERS += \
     library.h \
     mainwindow.h \
     staff.h \
-    student.h
+    student.h\
+    user.h\
+    schoolyear.h\
+    semester.h\
 
 FORMS += \
     mainwindow.ui

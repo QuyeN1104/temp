@@ -17,6 +17,7 @@ public:
 
 public:
     Student(string* data);
+    Student();
 };
 struct NodeStudent{
     Student data;
