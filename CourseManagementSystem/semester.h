@@ -1,12 +1,29 @@
-#ifndef _SEMESTER_H_
-#define _SEMESTER_H_
-#include "user.h"
-#include "course.h"
-#include "schoolyear.h"
-struct Semester {
-	Date startDate;
-	Date endDate;
-	SchoolYear schoolYear;
-	LinkedList_Courses listCourse;
+#pragma once
+#include"library.h"
+
+struct LinkedList_Courses;
+
+class Semester {
+    friend class Staff;
+public:
+    Semester();
+    Semester(Date startDate, Date endDate);
+    LinkedList_Courses* listCoursesOfSemeter;
+    bool operator!=(const Semester& other) const;
+ public:
+    Date startDate;
+    Date endDate;
 };
-#endif // !_SEMESTER_H_
+
+struct NodeSemester {
+    Semester data;
+    NodeSemester *next;
+    NodeSemester(Semester semester);
+};
+
+struct LinkedList_Semesters {
+    NodeSemester *head, *tail;
+     LinkedList_Semesters();
+    // Semester getDataSemester(NodeSemester* node) const ;
+};
+

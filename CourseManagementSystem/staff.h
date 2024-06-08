@@ -1,11 +1,41 @@
-#ifndef STAFF_H
-#define STAFF_H
-#include"class.h"
+#pragma once
+#include"library.h"
+#include"user.h"
 
-class Staff{
+// khai báo chuyển tiếp
+class Course;
+class SchoolYear;
+class Class;
+class Student;
+class Semester;
+
+struct LinkedList_Classes;
+struct LinkedList_Users;
+struct LinkedList_SchoolYears;
+struct LinkedList_Courses;
+struct LinkedList_Students;
+struct LinkedList_Semesters;
+
+struct NodeStudent;
+struct NodeSchoolYear;
+struct NodeSemester;
+struct NodeClass;
+struct NodeCourse;
+
+class Staff : public User {
 private:
-    LinkedList_Courses semeterCourses;
+    LinkedList_Classes*  listClassesOfSchool;
+    LinkedList_SchoolYears* listSchoolYearsOfSchool;
+    LinkedList_Users* listUsersOfSchool;
 public:
+    // các hàm getter
+    LinkedList_Classes* getListClassesOfSchool() const;
+
+    LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
+
+    LinkedList_Users* getListUsersOfSchool() const;
+
+    // các hàm thay đổi thông tin khóa học, lớp, ...
     void change_idCourse(Course& course,string newIdCourse);
     void change_nameCourse(Course& course,string newNameCourse);
     void change_className(Course& course,string newClassName);
@@ -14,10 +44,12 @@ public:
     void change_session(Course& course,string newSession);
     void change_dayofWeek(Course& course,string newDayofWeek);
     void change_maxStudents(Course& course,int newMaxStudens);
-    int countLines(const std::string& filename);
-    string** processCsvFile(const string& fileDirection, int& numRows);
-    void deletePointerData(string** s, int numRows);
-    void loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string& fileDirection);
+    // các hàm làm việc vơí file
+    // int countLines(const string& filename);
+    // string** processCsvFile(const string& fileDirection, int& numRows);
+    // void deletePointerData(string** s, int numRows);
+    // void loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string& fileDirection);
+    // hàm Course
     NodeCourse* getNodeCoursePointer(LinkedList_Courses lCourses, Course course);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses lCourses, int index);
     int getNodeCourseIndex(LinkedList_Courses lCourses, NodeCourse* pNodeCourse);
@@ -28,7 +60,8 @@ public:
     void addAfterCourse(LinkedList_Courses& lCourses, NodeCourse* pNodeCourseAfter, Course course);
     void addCourseAtIndex(LinkedList_Courses& lCourses, Course course, int index);
     void deleteCourse(LinkedList_Courses& lCourses, NodeCourse* pNodeCourse);
-    // NodeStudent* getNodeStudentPointer(LinkedList_Students lStudents, Student student);
+    // hàm cho Student
+    NodeStudent* getNodeStudentPointer(LinkedList_Students lStudents, Student student);
     NodeStudent* getNodeStudentPointer(LinkedList_Students lStudents, int index);
     int getNodeStudentIndex(LinkedList_Students lStudents, NodeStudent* pNodeStudent);
     NodeStudent* getPreviousNodeStudentPointer(LinkedList_Students lStudents, NodeStudent* pNodeStudent);
@@ -38,7 +71,8 @@ public:
     void addAfterStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStudentAfter, Student student);
     void addStudentAtIndex(LinkedList_Students& lStudents, Student student, int index);
     void deleteStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStudent);
-    //NodeClass* getNodeClassPointer(LinkedList_Classes lClasses, Class Class);
+    // hàm cho Class
+    NodeClass* getNodeClassPointer(LinkedList_Classes lClasses, Class Class);
     NodeClass* getNodeClassPointer(LinkedList_Classes lClasses, int index);
     int getNodeClassIndex(LinkedList_Classes lClasses, NodeClass* pNodeClass);
     NodeClass* getPreviousNodeClassPointer(LinkedList_Classes lClasses, NodeClass* pNodeClass);
@@ -48,5 +82,26 @@ public:
     void addAfterClass(LinkedList_Classes& lClasses, NodeClass* pNodeClassAfter, Class Class);
     void addClassAtIndex(LinkedList_Classes& lClasses, Class Class, int index);
     void deleteClass(LinkedList_Classes& lClasses, NodeClass* pNodeClass);
+    // hàm cho Semester
+    NodeSemester* getNodeSemesterPointer(LinkedList_Semesters lSemesters, Semester semester);
+    NodeSemester* getNodeSemesterPointer(LinkedList_Semesters lSemesters, int index);
+    int getNodeSemesterIndex(LinkedList_Semesters lSemesters, NodeSemester* pNodeSemester);
+    NodeSemester* getPreviousNodeSemesterPointer(LinkedList_Semesters lSemesters, NodeSemester* pNodeSemester);
+    void addHeadSemester(LinkedList_Semesters& lSemesters, Semester semester);
+    void addTailSemester(LinkedList_Semesters& lSemesters, Semester semester);
+    void addBeforeSemester(LinkedList_Semesters& lSemesters, NodeSemester* pNodeSemesterBefore, Semester semester);
+    void addAfterSemester(LinkedList_Semesters& lSemesters, NodeSemester* pNodeSemesterAfter, Semester semester);
+    void addSemesterAtIndex(LinkedList_Semesters& lSemesters, Semester semester, int index);
+    void deleteSemester(LinkedList_Semesters& lSemesters, NodeSemester* pNodeSemester);
+    // hàm cho SchoolYear
+    NodeSchoolYear* getNodeSchoolYearPointer(LinkedList_SchoolYears lSchoolYears, SchoolYear SchoolYear);
+    NodeSchoolYear* getNodeSchoolYearPointer(LinkedList_SchoolYears lSchoolYears, int index);
+    int getNodeSchoolYearIndex(LinkedList_SchoolYears lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
+    NodeSchoolYear* getPreviousNodeSchoolYearPointer(LinkedList_SchoolYears lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
+    void addHeadSchoolYear(LinkedList_SchoolYears& lSchoolYears, SchoolYear SchoolYear);
+    void addTailSchoolYear(LinkedList_SchoolYears& lSchoolYears, SchoolYear SchoolYear);
+    void addBeforeSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, SchoolYear SchoolYear);
+    void addAfterSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, SchoolYear SchoolYear);
+    void addSchoolYearAtIndex(LinkedList_SchoolYears& lSchoolYears, SchoolYear SchoolYear, int index);
+    void deleteSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
 };
-#endif // STAFF_H

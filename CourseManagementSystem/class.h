@@ -1,14 +1,21 @@
-#ifndef CLASS_H
-#define CLASS_H
-#include"student.h"
-class Class
-{
+#pragma once
+#include"library.h"
+struct LinkedList_Students;
+class Staff;
+class Class {
+    friend class Staff;
 private:
     string nameClass;
-    LinkedList_Students ListStudents;
+    LinkedList_Students* listStudentsOfClass;
 public:
     Class();
     Class(string name);
+    bool operator !=(const Class& other) const;
+    // Getter for nameClass
+    string getNameClass() const;
+
+    // Getter for listStudents
+    LinkedList_Students* getListStudents() const;
 };
 struct NodeClass{
     Class data;
@@ -18,6 +25,6 @@ struct NodeClass{
 struct LinkedList_Classes{
     NodeClass *head, *tail;
     LinkedList_Classes();
+    // Class getDataClass(NodeClass* node) const;
 };
 
-#endif // CLASS_H

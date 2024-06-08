@@ -1,27 +1,24 @@
-#ifndef _USER_H_
-#define _USER_H_
-#include "student.h"
-struct Date {
-    int day, month, year;
-};
+#pragma once
+#include "library.h"
+
 class User {
-private:
+protected:
     string firstName, lastName , userName, passWord;
-    Date dayofBirth;
+    Date dateofBirth;
     string gender;
-    bool isStaff;
+    // bool isStaff;
     string socialID;
 public:
     User();
+    User(string firstName, string lastName, string userName, string passWord, Date dateofBirth, string gender, string socialID);
     bool changePassWord(string oldPass, string newPass, string confirmNewPass);
 };
 struct NodeUser {
     User data;
     NodeUser* next;
-    //NodeUser(User user);
+    NodeUser(User user);
 };
-struct LinkedList_User {
+struct LinkedList_Users {
     NodeUser* head, * tail;
-    //LinkedList_User();
+    LinkedList_Users();
 };
-#endif // !_USER_H_

@@ -1,20 +1,29 @@
-#ifndef _SCHOOLYEAR_H_
-#define _SCHOOLYEAR_H_
-#include "class.h"
+#pragma once
+
+#include"library.h"
+
+struct LinkedList_Semesters;
 class SchoolYear {
-private:
-	string name;
-	LinkedList_Classes llClass;
+    friend class Staff;
 public:
-	SchoolYear();
+    string name;
+    bool operator !=(const SchoolYear& other) const;
+
+public:
+    LinkedList_Semesters* listSemestersOfYear;
+    SchoolYear();
+    SchoolYear(const string& name);
 };
+
 struct NodeSchoolYear {
-	SchoolYear data;
-	NodeSchoolYear* next;
-	//NodeSchoolYear(SchoolYear schoolyear);
+    SchoolYear data;
+    NodeSchoolYear* next;
+    NodeSchoolYear(const SchoolYear& schoolyear);
 };
-struct LinkedsList_SchoolYear {
-	NodeSchoolYear* head, * tail;
-	//LinkedList_SchoolYear();
+
+struct LinkedList_SchoolYears {
+    NodeSchoolYear* head, *tail;
+    LinkedList_SchoolYears();
+    // SchoolYear getDataSchoolYear(NodeSchoolYear* node) const ;
 };
-#endif // !_SCHOOLYEAR_H_
+

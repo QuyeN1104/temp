@@ -1,32 +1,25 @@
-#ifndef STUDENT_H
-#define STUDENT_H
-#include"course.h"
-class Student
-{
-// private:
+#pragma once
+#include"library.h"
+#include "user.h"
+struct LinkedList_SchoolYears;
+class Student : public User {
 public:
-    LinkedList_Courses enrolledCoures;
-    string enrolledclass;
     string studentID;
-    string no;
-    string firstName;
-    string lastName;
-    string gender;
-    string dateOfBirth;
-    string socialID;
-
+    string enrolledClass;
 public:
-    Student(string* data);
+    LinkedList_SchoolYears* dataOfStudents;
     Student();
+    bool operator !=(const Student& other) const;
 };
 struct NodeStudent{
     Student data;
     NodeStudent* next;
+    NodeStudent();
     NodeStudent(Student student);
 };
-struct LinkedList_Students{
+
+struct LinkedList_Students {
     NodeStudent *head, *tail;
     LinkedList_Students();
 };
 
-#endif // STUDENT_H

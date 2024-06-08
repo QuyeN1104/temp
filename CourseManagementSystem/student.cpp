@@ -1,14 +1,9 @@
 #include "student.h"
-Student::Student() : no(""), studentID(""), firstName(""), lastName(""), gender(""), dateOfBirth(""), socialID("") {}
-Student::Student(string* data){
-    int i = 0;
-    this->no = data[i++];
-    this->studentID = data[i++];
-    this->firstName = data[i++];
-    this->lastName = data[i++];
-    this->gender = data[i++];
-    this->dateOfBirth = data[i++];
-    this->socialID  = data[i++];
+#include "schoolyear.h"
+Student::Student() : studentID(""),enrolledClass("") {}
+bool Student::operator !=(const Student& other) const{
+    return this->studentID != other.studentID;
 }
-NodeStudent::NodeStudent(Student student) : data(student), next(nullptr) {};
-LinkedList_Students::LinkedList_Students(): head(nullptr) ,tail(nullptr) {};
+NodeStudent::NodeStudent() {}
+NodeStudent::NodeStudent(Student student) : data(student), next(nullptr) {}
+LinkedList_Students::LinkedList_Students(): head(nullptr), tail(nullptr) {}

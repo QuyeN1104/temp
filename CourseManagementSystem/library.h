@@ -1,6 +1,11 @@
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#pragma once
 #include<bits/stdc++.h>
-#define numCsvCols 7
 using namespace std;
-#endif // LIBRARY_H
+#define numCsvCols 7
+    struct Date {
+        int day, month, year;
+        bool operator!=(const Date& other) const {
+            return (day != other.day || month != other.month || year != other.year);
+        }
+    };
+
