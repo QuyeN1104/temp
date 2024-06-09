@@ -36,6 +36,8 @@ public:
 
     LinkedList_Users* getListUsersOfSchool() const;
 
+    // SchoolYear getSchoolYear()
+
     // các hàm thay đổi thông tin khóa học, lớp, ...
     void change_idCourse(Course& course,string newIdCourse);
     void change_nameCourse(Course& course,string newNameCourse);
@@ -53,6 +55,7 @@ public:
     // void loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string& fileDirection);
 
     // hàm Course
+    NodeCourse* getNodeCoursePointerByName(LinkedList_Courses* lCourses, const string& nameClass);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, int index);
     int getNodeCourseIndex(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
@@ -75,6 +78,7 @@ public:
     void addStudentAtIndex(LinkedList_Students* lStudents, const Student& student, int index);
     void deleteStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
     // hàm cho Class
+    NodeClass* getNodeClassPointerByName(LinkedList_Classes *lClasses, const string& nameClass); // ex : 23CTT5
     NodeClass* getNodeClassPointer(LinkedList_Classes* lClasses, const Class& Class);
     NodeClass* getNodeClassPointer(LinkedList_Classes* lClasses, int index);
     int getNodeClassIndex(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
@@ -86,6 +90,7 @@ public:
     void addClassAtIndex(LinkedList_Classes* lClasses, const Class& Class, int index);
     void deleteClass(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
     // hàm cho Semester
+    NodeSemester* getNodeSemesterPointerByName(LinkedList_Semesters* lSemesters, const string& nameSemester);
     NodeSemester* getNodeSemesterPointer(LinkedList_Semesters* lSemesters, const Semester& semester);
     NodeSemester* getNodeSemesterPointer(LinkedList_Semesters* lSemesters, int index);
     int getNodeSemesterIndex(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
@@ -97,6 +102,7 @@ public:
     void addSemesterAtIndex(LinkedList_Semesters* lSemesters, const Semester& semester, int index);
     void deleteSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
     // hàm cho SchoolYear
+    NodeSchoolYear* getNodeSchoolYearPointerByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear);
     NodeSchoolYear* getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
     NodeSchoolYear* getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, int index);
     int getNodeSchoolYearIndex(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);

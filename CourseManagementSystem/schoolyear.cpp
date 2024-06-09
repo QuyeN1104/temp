@@ -11,6 +11,8 @@ bool SchoolYear::operator !=(const SchoolYear& other) const{
     return this->name != other.name;
 }
 // Constructor của NodeSchoolYear
+NodeSchoolYear::NodeSchoolYear() : data(SchoolYear()) , next(nullptr) {}
+
 NodeSchoolYear::NodeSchoolYear(const SchoolYear& schoolyear) : data(schoolyear), next(nullptr) {}
 
 // Constructor mặc định của LinkedList_SchoolYear

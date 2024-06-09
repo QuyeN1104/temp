@@ -4,7 +4,7 @@ struct LinkedList_Students;
 class Course  {
     friend class Staff;
 private:
-    string idCourse, nameCourse, className, teacherName;
+    string idCourse, nameCourse, className, teacherName; // className là đặc điểm riêng biệt của mỗi object
     int numCredits;
     string dayofWeek;
     string session;

@@ -7,7 +7,7 @@
 #include"class.h"
 
 Staff::Staff() : listClassesOfSchool(new LinkedList_Classes ()), listSchoolYearsOfSchool(new LinkedList_SchoolYears())
-    , listUsersOfSchool(new LinkedList_Users())  {}
+    , listUsersOfSchool(new LinkedList_Users()) {}
 
 LinkedList_Classes* Staff::getListClassesOfSchool() const {
     return this->listClassesOfSchool;
@@ -111,11 +111,21 @@ void Staff::change_maxStudents(Course& course,int newMaxStudens){
 //     deletePointerData(data,numRows);
 // }
 
-
+// hàm cho Course
 
 NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course){
+    if(lCourses->head == NULL) return NULL;
     NodeCourse* pNodeCourse = lCourses->head;
     while(pNodeCourse != NULL && (pNodeCourse->data != course)){
+        pNodeCourse = pNodeCourse->next;
+    }
+    return pNodeCourse;
+}
+
+NodeCourse* getNodeCoursePointerByName(LinkedList_Courses* lCourses, const string& nameClass){
+    if(lCourses->head == NULL) return NULL;
+    NodeCourse* pNodeCourse = lCourses->head;
+    while(pNodeCourse != NULL && (pNodeCourse->data.getClassName() != nameClass)){
         pNodeCourse = pNodeCourse->next;
     }
     return pNodeCourse;
@@ -390,8 +400,18 @@ void Staff::deleteStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStud
 
 
 NodeClass* Staff::getNodeClassPointer(LinkedList_Classes* lClasses, const Class& Class){
+    if(lClasses == NULL || lClasses->head == NULL) return NULL;
     NodeClass* pNodeClass = lClasses->head;
     while(pNodeClass != NULL && (pNodeClass->data != Class)){
+        pNodeClass = pNodeClass->next;
+    }
+    return pNodeClass;
+}
+
+NodeClass* Staff::getNodeClassPointerByName(LinkedList_Classes *lClasses, const string& nameClass){
+    if(lClasses == NULL || lClasses->head == NULL) return NULL;
+    NodeClass* pNodeClass = lClasses->head;
+    while(pNodeClass != NULL && (pNodeClass->data.getNameClass() != nameClass)){
         pNodeClass = pNodeClass->next;
     }
     return pNodeClass;
@@ -527,8 +547,17 @@ void Staff::deleteClass(LinkedList_Classes* lClasses, NodeClass* pNodeClass) {
 // Các hàm cho Semester
 
 NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters* lSemesters, const Semester& semester){
+    if(lSemesters == NULL) return NULL;
     NodeSemester* pNodeSemester = lSemesters->head;
     while(pNodeSemester != NULL && (pNodeSemester->data != semester)){
+        pNodeSemester = pNodeSemester->next;
+    }
+    return pNodeSemester;
+}
+
+NodeSemester* getNodeSemesterPointerByName(LinkedList_Semesters* lSemesters, const string& nameSemester){
+    NodeSemester* pNodeSemester = lSemesters->head;
+    while(pNodeSemester != NULL && (pNodeSemester->data.getNameSemester() != nameSemester)){
         pNodeSemester = pNodeSemester->next;
     }
     return pNodeSemester;
@@ -666,6 +695,15 @@ void Staff::deleteSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNode
 NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear){
     NodeSchoolYear* pNodeSchoolYear = lSchoolYears->head;
     while(pNodeSchoolYear != NULL && (pNodeSchoolYear->data != schoolyear)){
+        pNodeSchoolYear = pNodeSchoolYear->next;
+    }
+    return pNodeSchoolYear;
+}
+
+NodeSchoolYear* Staff::getNodeSchoolYearPointerByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear){
+    if(lSchoolYears == NULL) return NULL;
+    NodeSchoolYear* pNodeSchoolYear = lSchoolYears->head;
+    while(pNodeSchoolYear != NULL && (pNodeSchoolYear->data.getNameSchoolYear() != nameSchoolYear)){
         pNodeSchoolYear = pNodeSchoolYear->next;
     }
     return pNodeSchoolYear;

@@ -20,10 +20,12 @@ struct NodeSchoolYear {
     SchoolYear data;
     NodeSchoolYear* next;
     NodeSchoolYear(const SchoolYear& schoolyear);
+    NodeSchoolYear();
 };
 
 struct LinkedList_SchoolYears {
     NodeSchoolYear* head, *tail;
     LinkedList_SchoolYears();
+    SchoolYear* findSchoolYearByName(const string& nameSchoolYear);
 };
 

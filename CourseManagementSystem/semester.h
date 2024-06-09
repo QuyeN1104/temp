@@ -8,13 +8,15 @@ class Semester {
 private:
     Date startDate;
     Date endDate;
+    string nameSemester;
     LinkedList_Courses* listCoursesOfSemeter;
 public:
     Semester();
-    Semester(Date startDate, Date endDate);
+    Semester(Date startDate, Date endDate,string name);
     bool operator!=(const Semester& other) const;
     Date getStartDate() const;
     Date getEndDate() const;
+    string getNameSemester() const;
     LinkedList_Courses* getListCourses() const;
 };
 
