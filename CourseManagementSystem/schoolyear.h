@@ -5,14 +5,15 @@
 struct LinkedList_Semesters;
 class SchoolYear {
     friend class Staff;
-public:
+private:
     string name;
-    bool operator !=(const SchoolYear& other) const;
-
-public:
     LinkedList_Semesters* listSemestersOfYear;
+public:
+    bool operator !=(const SchoolYear& other) const;
     SchoolYear();
     SchoolYear(const string& name);
+    string getNameSchoolYear() const;
+    LinkedList_Semesters* getListSemesters() const;
 };
 
 struct NodeSchoolYear {
@@ -24,6 +25,5 @@ struct NodeSchoolYear {
 struct LinkedList_SchoolYears {
     NodeSchoolYear* head, *tail;
     LinkedList_SchoolYears();
-    // SchoolYear getDataSchoolYear(NodeSchoolYear* node) const ;
 };
 

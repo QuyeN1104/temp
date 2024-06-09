@@ -1,11 +1,19 @@
-#include"staff.h"
-#include"course.h"
-#include"student.h"
+#include "staff.h"
+#include "course.h"
+#include "library.h"
+#include "schoolyear.h"
+#include "semester.h"
+#include "student.h"
+#include "class.h"
+
 int main() {
-    cout << "hello";
     Staff a;
-    LinkedList_Students* s = new LinkedList_Students;
+    Course s;
+    LinkedList_Students* list = s.getListStudents();
     Student d;
-    a.addHeadStudent(*s,d);
+    d.studentID = "1313";
+    a.addHeadStudent(list,d);
+    delete list;
     return 0;
+
 }

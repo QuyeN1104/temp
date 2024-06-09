@@ -5,25 +5,27 @@ struct LinkedList_Courses;
 
 class Semester {
     friend class Staff;
+private:
+    Date startDate;
+    Date endDate;
+    LinkedList_Courses* listCoursesOfSemeter;
 public:
     Semester();
     Semester(Date startDate, Date endDate);
-    LinkedList_Courses* listCoursesOfSemeter;
     bool operator!=(const Semester& other) const;
- public:
-    Date startDate;
-    Date endDate;
+    Date getStartDate() const;
+    Date getEndDate() const;
+    LinkedList_Courses* getListCourses() const;
 };
 
 struct NodeSemester {
     Semester data;
     NodeSemester *next;
-    NodeSemester(Semester semester);
+    NodeSemester(const Semester& semester);
 };
 
 struct LinkedList_Semesters {
     NodeSemester *head, *tail;
-     LinkedList_Semesters();
-    // Semester getDataSemester(NodeSemester* node) const ;
+    LinkedList_Semesters();
 };
 

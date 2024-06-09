@@ -15,7 +15,7 @@ struct NodeStudent{
     Student data;
     NodeStudent* next;
     NodeStudent();
-    NodeStudent(Student student);
+    NodeStudent(const Student& student);
 };
 
 struct LinkedList_Students {

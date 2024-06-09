@@ -108,16 +108,18 @@ void Staff::change_maxStudents(Course& course,int newMaxStudens){
 //     deletePointerData(data,numRows);
 // }
 
-NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses lCourses, Course course){
-    NodeCourse* pNodeCourse = lCourses.head;
-    if(pNodeCourse == NULL) return NULL;
+
+
+NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course){
+    NodeCourse* pNodeCourse = lCourses->head;
     while(pNodeCourse != NULL && (pNodeCourse->data != course)){
         pNodeCourse = pNodeCourse->next;
     }
     return pNodeCourse;
 }
-NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses lCourses, int index){
-    NodeCourse* pNodeCourse = lCourses.head;
+
+NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses* lCourses, int index){
+    NodeCourse* pNodeCourse = lCourses->head;
     int currentIndex = 0;
     while(pNodeCourse != NULL && currentIndex < index){
         pNodeCourse = pNodeCourse->next;
@@ -125,9 +127,10 @@ NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses lCourses, int index){
     }
     return pNodeCourse;
 }
-int Staff::getNodeCourseIndex(LinkedList_Courses lCourses, NodeCourse* pNodeCourse){
-    if(lCourses.head == NULL) return -1;
-    NodeCourse* p = lCourses.head;
+
+int Staff::getNodeCourseIndex(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse){
+    if(lCourses->head == NULL) return -1;
+    NodeCourse* p = lCourses->head;
     int currentIndex = 0;
     while(p != NULL){
         if(p == pNodeCourse){
@@ -138,11 +141,12 @@ int Staff::getNodeCourseIndex(LinkedList_Courses lCourses, NodeCourse* pNodeCour
     }
     return -1;
 }
-NodeCourse* Staff::getPreviousNodeCoursePointer(LinkedList_Courses lCourses, NodeCourse* pNodeCourse){
-    NodeCourse* p = lCourses.head;
+
+NodeCourse* Staff::getPreviousNodeCoursePointer(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse){
+    NodeCourse* p = lCourses->head;
     NodeCourse* pPrev = NULL;
     while(p != NULL){
-        if(p==pNodeCourse){
+        if(p == pNodeCourse){
             return pPrev;
         }
         pPrev = p;
@@ -150,58 +154,66 @@ NodeCourse* Staff::getPreviousNodeCoursePointer(LinkedList_Courses lCourses, Nod
     }
     return NULL;
 }
-void Staff::addHeadCourse(LinkedList_Courses& lCourses, Course course){
-    NodeCourse* pNodeCourse = new NodeCourse(course);
-    pNodeCourse->next = lCourses.head;
-    lCourses.head = pNodeCourse;
-    if(lCourses.tail == NULL) lCourses.tail = lCourses.head;
-}
-void Staff::addTailCourse(LinkedList_Courses& lCourses, Course course){
 
+void Staff::addHeadCourse(LinkedList_Courses* lCourses, const Course& course){
     NodeCourse* pNodeCourse = new NodeCourse(course);
-    if(lCourses.tail == NULL){
-        lCourses.head = lCourses.tail = pNodeCourse;
-        return;
+    if(pNodeCourse){
+    pNodeCourse->next = lCourses->head;
+    lCourses->head = pNodeCourse;
+    if(lCourses->tail == NULL) lCourses->tail = lCourses->head;
     }
-    lCourses.tail->next = pNodeCourse;
-    lCourses.tail = pNodeCourse;
 }
-void Staff::addBeforeCourse(LinkedList_Courses& lCourses, NodeCourse* pNodeCourseBefore,Course course){
-    if(pNodeCourseBefore == NULL) return ;
-    if(pNodeCourseBefore == lCourses.head){
-        addHeadCourse(lCourses,course);
+
+void Staff::addTailCourse(LinkedList_Courses* lCourses, const Course& course){
+    NodeCourse* pNodeCourse = new NodeCourse(course);
+    if(pNodeCourse){
+    if(lCourses->tail == NULL){
+        lCourses->head = lCourses->tail = pNodeCourse;
+        return;
+    }
+    lCourses->tail->next = pNodeCourse;
+    lCourses->tail = pNodeCourse;
+    }
+}
+
+void Staff::addBeforeCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourseBefore, const Course& course){
+    if(pNodeCourseBefore == NULL) return;
+    if(pNodeCourseBefore == lCourses->head){
+        addHeadCourse(lCourses, course);
         return;
     }
     NodeCourse* pNodeCourse = new NodeCourse(course);
-    NodeCourse* p = getPreviousNodeCoursePointer(lCourses,pNodeCourseBefore);
-    if(p==NULL) return;
+    NodeCourse* p = getPreviousNodeCoursePointer(lCourses, pNodeCourseBefore);
+    if(p == NULL) return;
     p->next = pNodeCourse;
     pNodeCourse->next = pNodeCourseBefore;
 }
-void Staff::addAfterCourse(LinkedList_Courses& lCourses,NodeCourse* pNodeCourseAfter,Course course){
+
+void Staff::addAfterCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourseAfter, const Course& course){
     NodeCourse* pNodeCourse = new NodeCourse(course);
-    NodeCourse* p = lCourses.head;
-    if(p == NULL || pNodeCourseAfter == NULL) return;
+    if(lCourses->head == NULL || pNodeCourseAfter == NULL) return;
+    NodeCourse* p = lCourses->head;
     while(p != NULL){
         if(p == pNodeCourseAfter) break;
         p = p->next;
     }
-    if(p==NULL) return;
-    p = pNodeCourseAfter->next;
+    if(p == NULL) return;
+    pNodeCourse->next = pNodeCourseAfter->next;
     pNodeCourseAfter->next = pNodeCourse;
-    pNodeCourse->next = p;
-    if(p==NULL){
-        lCourses.tail = pNodeCourse;
+    if(pNodeCourseAfter == lCourses->tail){
+        lCourses->tail = pNodeCourse;
     }
 }
-void Staff::addCourseAtIndex(LinkedList_Courses& lCourses, Course course, int index){
-    NodeCourse* p = getNodeCoursePointer(lCourses,index);
-    addAfterCourse(lCourses,p,course);
-}
-void Staff::deleteCourse(LinkedList_Courses& lCourses, NodeCourse* pNodeCourse) {
-    if (lCourses.head == NULL) return; // Danh sách trống
 
-    NodeCourse* temp = lCourses.head;
+void Staff::addCourseAtIndex(LinkedList_Courses* lCourses, const Course& course, int index){
+    NodeCourse* p = getNodeCoursePointer(lCourses, index);
+    addBeforeCourse(lCourses, p, course);
+}
+
+void Staff::deleteCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse) {
+    if (lCourses->head == NULL) return; // Danh sách trống
+
+    NodeCourse* temp = lCourses->head;
     NodeCourse* prev = NULL;
 
     // Tìm nút chứa khóa học cần xóa
@@ -215,19 +227,19 @@ void Staff::deleteCourse(LinkedList_Courses& lCourses, NodeCourse* pNodeCourse) 
     if (temp == NULL) return;
 
     // Nếu khóa học cần xóa là đầu danh sách
-    if (temp == lCourses.head) {
-        lCourses.head = temp->next;
-        if (lCourses.head == NULL) {
-            lCourses.tail = NULL; // Nếu danh sách trống sau khi xóa
+    if (temp == lCourses->head) {
+        lCourses->head = temp->next;
+        if (lCourses->head == NULL) {
+            lCourses->tail = NULL; // Nếu danh sách trống sau khi xóa
         }
         delete temp;
         return;
     }
 
     // Nếu khóa học cần xóa là cuối danh sách
-    if (temp == lCourses.tail) {
-        lCourses.tail = prev;
-        lCourses.tail->next = NULL;
+    if (temp == lCourses->tail) {
+        lCourses->tail = prev;
+        lCourses->tail->next = NULL;
         delete temp;
         return;
     }
@@ -237,29 +249,30 @@ void Staff::deleteCourse(LinkedList_Courses& lCourses, NodeCourse* pNodeCourse) 
     delete temp;
 }
 
-NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students lStudents, Student student) {
-    NodeStudent* pNodeStudent = lStudents.head;
-    if (pNodeStudent == NULL) return NULL;
-    while (pNodeStudent != NULL && (pNodeStudent->data != student)) {
+NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, const Student& student){
+    NodeStudent* pNodeStudent = lStudents->head;
+    while(pNodeStudent != NULL && (pNodeStudent->data != student)){
         pNodeStudent = pNodeStudent->next;
     }
     return pNodeStudent;
 }
-NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students lStudents, int index) {
-    NodeStudent* pNodeStudent = lStudents.head;
+
+NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, int index){
+    NodeStudent* pNodeStudent = lStudents->head;
     int currentIndex = 0;
-    while (pNodeStudent != NULL && currentIndex < index) {
+    while(pNodeStudent != NULL && currentIndex < index){
         pNodeStudent = pNodeStudent->next;
         currentIndex++;
     }
     return pNodeStudent;
 }
-int Staff::getNodeStudentIndex(LinkedList_Students lStudents, NodeStudent* pNodeStudent) {
-    if (lStudents.head == NULL) return -1;
-    NodeStudent* p = lStudents.head;
+
+int Staff::getNodeStudentIndex(LinkedList_Students* lStudents, NodeStudent* pNodeStudent){
+    if(lStudents->head == NULL) return -1;
+    NodeStudent* p = lStudents->head;
     int currentIndex = 0;
-    while (p != NULL) {
-        if (p == pNodeStudent) {
+    while(p != NULL){
+        if(p == pNodeStudent){
             return currentIndex;
         }
         p = p->next;
@@ -267,11 +280,12 @@ int Staff::getNodeStudentIndex(LinkedList_Students lStudents, NodeStudent* pNode
     }
     return -1;
 }
-NodeStudent* Staff::getPreviousNodeStudentPointer(LinkedList_Students lStudents, NodeStudent* pNodeStudent) {
-    NodeStudent* p = lStudents.head;
+
+NodeStudent* Staff::getPreviousNodeStudentPointer(LinkedList_Students* lStudents, NodeStudent* pNodeStudent){
+    NodeStudent* p = lStudents->head;
     NodeStudent* pPrev = NULL;
-    while (p != NULL) {
-        if (p == pNodeStudent) {
+    while(p != NULL){
+        if(p == pNodeStudent){
             return pPrev;
         }
         pPrev = p;
@@ -279,67 +293,67 @@ NodeStudent* Staff::getPreviousNodeStudentPointer(LinkedList_Students lStudents,
     }
     return NULL;
 }
-void Staff::addHeadStudent(LinkedList_Students& lStudents, Student student) {
-    NodeStudent* pNodeStudent = new NodeStudent(student);
-    pNodeStudent->next = lStudents.head;
-    lStudents.head = pNodeStudent;
-    if (lStudents.tail == NULL) lStudents.tail = lStudents.head;
-}
-void Staff::addTailStudent(LinkedList_Students& lStudents, Student student) {
 
+void Staff::addHeadStudent(LinkedList_Students* lStudents, const Student& student){
     NodeStudent* pNodeStudent = new NodeStudent(student);
-    if (lStudents.tail == NULL) {
-        lStudents.head = lStudents.tail = pNodeStudent;
+    pNodeStudent->next = lStudents->head;
+    lStudents->head = pNodeStudent;
+    if(lStudents->tail == NULL) lStudents->tail = lStudents->head;
+}
+
+void Staff::addTailStudent(LinkedList_Students* lStudents, const Student& student){
+    NodeStudent* pNodeStudent = new NodeStudent(student);
+    if(lStudents->tail == NULL){
+        lStudents->head = lStudents->tail = pNodeStudent;
         return;
     }
-    lStudents.tail->next = pNodeStudent;
-    lStudents.tail = pNodeStudent;
+    lStudents->tail->next = pNodeStudent;
+    lStudents->tail = pNodeStudent;
 }
-void Staff::addBeforeStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStudentBefore, Student student) {
-    if (pNodeStudentBefore == NULL) return;
-    if (pNodeStudentBefore == lStudents.head) {
+
+void Staff::addBeforeStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudentBefore, const Student& student){
+    if(pNodeStudentBefore == NULL) return;
+    if(pNodeStudentBefore == lStudents->head){
         addHeadStudent(lStudents, student);
         return;
     }
     NodeStudent* pNodeStudent = new NodeStudent(student);
     NodeStudent* p = getPreviousNodeStudentPointer(lStudents, pNodeStudentBefore);
-    if (p == NULL) return;
+    if(p == NULL) return;
     p->next = pNodeStudent;
     pNodeStudent->next = pNodeStudentBefore;
 }
-void Staff::addAfterStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStudentAfter, Student student) {
+
+void Staff::addAfterStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudentAfter, const Student& student){
     NodeStudent* pNodeStudent = new NodeStudent(student);
-    NodeStudent* p = lStudents.head;
-    if (p == NULL || pNodeStudentAfter == NULL) return;
-    while (p != NULL) {
-        if (p == pNodeStudentAfter) break;
+    if(lStudents->head == NULL || pNodeStudentAfter == NULL) return;
+    NodeStudent* p = lStudents->head;
+    while(p != NULL){
+        if(p == pNodeStudentAfter) break;
         p = p->next;
     }
-    if (p == NULL) return;
-    p = pNodeStudentAfter->next;
+    if(p == NULL) return;
+    pNodeStudent->next = pNodeStudentAfter->next;
     pNodeStudentAfter->next = pNodeStudent;
-    pNodeStudent->next = p;
-    if (p == NULL) {
-        lStudents.tail = pNodeStudent;
+    if(pNodeStudentAfter == lStudents->tail){
+        lStudents->tail = pNodeStudent;
     }
 }
-void Staff::addStudentAtIndex(LinkedList_Students& lStudents, Student student, int index) {
-    if(index == 0){
-        addHeadStudent(lStudents,student);
-        return;
-    }
-    NodeStudent* p = getNodeStudentPointer(lStudents, index - 1);
-    addAfterStudent(lStudents, p, student);
-}
-void Staff::deleteStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStudent) {
-    if (lStudents.head == NULL) return; // Danh sách trống
 
-    NodeStudent* temp = lStudents.head;
+void Staff::addStudentAtIndex(LinkedList_Students* lStudents, const Student& student, int index){
+    NodeStudent* p = getNodeStudentPointer(lStudents, index);
+    addBeforeStudent(lStudents, p, student);
+}
+
+void Staff::deleteStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudent) {
+    if (lStudents->head == NULL) return; // Danh sách trống
+
+    NodeStudent* temp = lStudents->head;
     NodeStudent* prev = NULL;
 
     // Tìm nút chứa khóa học cần xóa
     while (temp != NULL) {
-        if (temp == pNodeStudent) break;
+        if(temp == pNodeStudent) break;
         prev = temp;
         temp = temp->next;
     }
@@ -348,19 +362,19 @@ void Staff::deleteStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStud
     if (temp == NULL) return;
 
     // Nếu khóa học cần xóa là đầu danh sách
-    if (temp == lStudents.head) {
-        lStudents.head = temp->next;
-        if (lStudents.head == NULL) {
-            lStudents.tail = NULL; // Nếu danh sách trống sau khi xóa
+    if (temp == lStudents->head) {
+        lStudents->head = temp->next;
+        if (lStudents->head == NULL) {
+            lStudents->tail = NULL; // Nếu danh sách trống sau khi xóa
         }
         delete temp;
         return;
     }
 
     // Nếu khóa học cần xóa là cuối danh sách
-    if (temp == lStudents.tail) {
-        lStudents.tail = prev;
-        lStudents.tail->next = NULL;
+    if (temp == lStudents->tail) {
+        lStudents->tail = prev;
+        lStudents->tail->next = NULL;
         delete temp;
         return;
     }
@@ -369,30 +383,33 @@ void Staff::deleteStudent(LinkedList_Students& lStudents, NodeStudent* pNodeStud
     prev->next = temp->next;
     delete temp;
 }
+// ham cho Class
 
-NodeClass* Staff::getNodeClassPointer(LinkedList_Classes lClasses, Class Class) {
-    NodeClass* pNodeClass = lClasses.head;
-    if (pNodeClass == NULL) return NULL;
-    while (pNodeClass != NULL && (pNodeClass->data != Class)) {
+
+NodeClass* Staff::getNodeClassPointer(LinkedList_Classes* lClasses, const Class& Class){
+    NodeClass* pNodeClass = lClasses->head;
+    while(pNodeClass != NULL && (pNodeClass->data != Class)){
         pNodeClass = pNodeClass->next;
     }
     return pNodeClass;
 }
-NodeClass* Staff::getNodeClassPointer(LinkedList_Classes lClasses, int index) {
-    NodeClass* pNodeClass = lClasses.head;
+
+NodeClass* Staff::getNodeClassPointer(LinkedList_Classes* lClasses, int index){
+    NodeClass* pNodeClass = lClasses->head;
     int currentIndex = 0;
-    while (pNodeClass != NULL && currentIndex < index) {
+    while(pNodeClass != NULL && currentIndex < index){
         pNodeClass = pNodeClass->next;
         currentIndex++;
     }
     return pNodeClass;
 }
-int Staff::getNodeClassIndex(LinkedList_Classes lClasses, NodeClass* pNodeClass) {
-    if (lClasses.head == NULL) return -1;
-    NodeClass* p = lClasses.head;
+
+int Staff::getNodeClassIndex(LinkedList_Classes* lClasses, NodeClass* pNodeClass){
+    if(lClasses->head == NULL) return -1;
+    NodeClass* p = lClasses->head;
     int currentIndex = 0;
-    while (p != NULL) {
-        if (p == pNodeClass) {
+    while(p != NULL){
+        if(p == pNodeClass){
             return currentIndex;
         }
         p = p->next;
@@ -400,11 +417,12 @@ int Staff::getNodeClassIndex(LinkedList_Classes lClasses, NodeClass* pNodeClass)
     }
     return -1;
 }
-NodeClass* Staff::getPreviousNodeClassPointer(LinkedList_Classes lClasses, NodeClass* pNodeClass) {
-    NodeClass* p = lClasses.head;
+
+NodeClass* Staff::getPreviousNodeClassPointer(LinkedList_Classes* lClasses, NodeClass* pNodeClass){
+    NodeClass* p = lClasses->head;
     NodeClass* pPrev = NULL;
-    while (p != NULL) {
-        if (p == pNodeClass) {
+    while(p != NULL){
+        if(p == pNodeClass){
             return pPrev;
         }
         pPrev = p;
@@ -412,63 +430,67 @@ NodeClass* Staff::getPreviousNodeClassPointer(LinkedList_Classes lClasses, NodeC
     }
     return NULL;
 }
-void Staff::addHeadClass(LinkedList_Classes& lClasses, Class Class) {
-    NodeClass* pNodeClass = new NodeClass(Class);
-    pNodeClass->next = lClasses.head;
-    lClasses.head = pNodeClass;
-    if (lClasses.tail == NULL) lClasses.tail = lClasses.head;
-}
-void Staff::addTailClass(LinkedList_Classes& lClasses, Class Class) {
 
+void Staff::addHeadClass(LinkedList_Classes* lClasses, const Class& Class){
     NodeClass* pNodeClass = new NodeClass(Class);
-    if (lClasses.tail == NULL) {
-        lClasses.head = lClasses.tail = pNodeClass;
+    pNodeClass->next = lClasses->head;
+    lClasses->head = pNodeClass;
+    if(lClasses->tail == NULL) lClasses->tail = lClasses->head;
+}
+
+void Staff::addTailClass(LinkedList_Classes* lClasses, const Class& Class){
+    NodeClass* pNodeClass = new NodeClass(Class);
+    if(lClasses->tail == NULL){
+        lClasses->head = lClasses->tail = pNodeClass;
         return;
     }
-    lClasses.tail->next = pNodeClass;
-    lClasses.tail = pNodeClass;
+    lClasses->tail->next = pNodeClass;
+    lClasses->tail = pNodeClass;
 }
-void Staff::addBeforeClass(LinkedList_Classes& lClasses, NodeClass* pNodeClassBefore, Class Class) {
-    if (pNodeClassBefore == NULL) return;
-    if (pNodeClassBefore == lClasses.head) {
+
+void Staff::addBeforeClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassBefore, const Class& Class){
+    if(pNodeClassBefore == NULL) return;
+    if(pNodeClassBefore == lClasses->head){
         addHeadClass(lClasses, Class);
         return;
     }
     NodeClass* pNodeClass = new NodeClass(Class);
     NodeClass* p = getPreviousNodeClassPointer(lClasses, pNodeClassBefore);
-    if (p == NULL) return;
+    if(p == NULL) return;
     p->next = pNodeClass;
     pNodeClass->next = pNodeClassBefore;
 }
-void Staff::addAfterClass(LinkedList_Classes& lClasses, NodeClass* pNodeClassAfter, Class Class) {
+
+void Staff::addAfterClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassAfter, const Class& Class){
     NodeClass* pNodeClass = new NodeClass(Class);
-    NodeClass* p = lClasses.head;
-    if (p == NULL || pNodeClassAfter == NULL) return;
-    while (p != NULL) {
-        if (p == pNodeClassAfter) break;
+    if(lClasses->head == NULL || pNodeClassAfter == NULL) return;
+    NodeClass* p = lClasses->head;
+    while(p != NULL){
+        if(p == pNodeClassAfter) break;
         p = p->next;
     }
-    if (p == NULL) return;
-    p = pNodeClassAfter->next;
+    if(p == NULL) return;
+    pNodeClass->next = pNodeClassAfter->next;
     pNodeClassAfter->next = pNodeClass;
-    pNodeClass->next = p;
-    if (p == NULL) {
-        lClasses.tail = pNodeClass;
+    if(pNodeClassAfter == lClasses->tail){
+        lClasses->tail = pNodeClass;
     }
 }
-void Staff::addClassAtIndex(LinkedList_Classes& lClasses, Class Class, int index) {
-    NodeClass* p = getNodeClassPointer(lClasses, index);
-    addAfterClass(lClasses, p, Class);
-}
-void Staff::deleteClass(LinkedList_Classes& lClasses, NodeClass* pNodeClass) {
-    if (lClasses.head == NULL) return; // Danh sách trống
 
-    NodeClass* temp = lClasses.head;
+void Staff::addClassAtIndex(LinkedList_Classes* lClasses, const Class& Class, int index){
+    NodeClass* p = getNodeClassPointer(lClasses, index);
+    addBeforeClass(lClasses, p, Class);
+}
+
+void Staff::deleteClass(LinkedList_Classes* lClasses, NodeClass* pNodeClass) {
+    if (lClasses->head == NULL) return; // Danh sách trống
+
+    NodeClass* temp = lClasses->head;
     NodeClass* prev = NULL;
 
     // Tìm nút chứa khóa học cần xóa
     while (temp != NULL) {
-        if (temp == pNodeClass) break;
+        if(temp == pNodeClass) break;
         prev = temp;
         temp = temp->next;
     }
@@ -477,19 +499,19 @@ void Staff::deleteClass(LinkedList_Classes& lClasses, NodeClass* pNodeClass) {
     if (temp == NULL) return;
 
     // Nếu khóa học cần xóa là đầu danh sách
-    if (temp == lClasses.head) {
-        lClasses.head = temp->next;
-        if (lClasses.head == NULL) {
-            lClasses.tail = NULL; // Nếu danh sách trống sau khi xóa
+    if (temp == lClasses->head) {
+        lClasses->head = temp->next;
+        if (lClasses->head == NULL) {
+            lClasses->tail = NULL; // Nếu danh sách trống sau khi xóa
         }
         delete temp;
         return;
     }
 
     // Nếu khóa học cần xóa là cuối danh sách
-    if (temp == lClasses.tail) {
-        lClasses.tail = prev;
-        lClasses.tail->next = NULL;
+    if (temp == lClasses->tail) {
+        lClasses->tail = prev;
+        lClasses->tail->next = NULL;
         delete temp;
         return;
     }
@@ -501,17 +523,16 @@ void Staff::deleteClass(LinkedList_Classes& lClasses, NodeClass* pNodeClass) {
 // hàm cho Semester
 // Các hàm cho Semester
 
-NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters lSemesters, Semester semester){
-    NodeSemester* pNodeSemester = lSemesters.head;
-    if(pNodeSemester == NULL) return NULL;
+NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters* lSemesters, const Semester& semester){
+    NodeSemester* pNodeSemester = lSemesters->head;
     while(pNodeSemester != NULL && (pNodeSemester->data != semester)){
         pNodeSemester = pNodeSemester->next;
     }
     return pNodeSemester;
 }
 
-NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters lSemesters, int index){
-    NodeSemester* pNodeSemester = lSemesters.head;
+NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters* lSemesters, int index){
+    NodeSemester* pNodeSemester = lSemesters->head;
     int currentIndex = 0;
     while(pNodeSemester != NULL && currentIndex < index){
         pNodeSemester = pNodeSemester->next;
@@ -520,9 +541,9 @@ NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters lSemesters, int
     return pNodeSemester;
 }
 
-int Staff::getNodeSemesterIndex(LinkedList_Semesters lSemesters, NodeSemester* pNodeSemester){
-    if(lSemesters.head == NULL) return -1;
-    NodeSemester* p = lSemesters.head;
+int Staff::getNodeSemesterIndex(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester){
+    if(lSemesters->head == NULL) return -1;
+    NodeSemester* p = lSemesters->head;
     int currentIndex = 0;
     while(p != NULL){
         if(p == pNodeSemester){
@@ -534,8 +555,8 @@ int Staff::getNodeSemesterIndex(LinkedList_Semesters lSemesters, NodeSemester* p
     return -1;
 }
 
-NodeSemester* Staff::getPreviousNodeSemesterPointer(LinkedList_Semesters lSemesters, NodeSemester* pNodeSemester){
-    NodeSemester* p = lSemesters.head;
+NodeSemester* Staff::getPreviousNodeSemesterPointer(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester){
+    NodeSemester* p = lSemesters->head;
     NodeSemester* pPrev = NULL;
     while(p != NULL){
         if(p == pNodeSemester){
@@ -547,26 +568,26 @@ NodeSemester* Staff::getPreviousNodeSemesterPointer(LinkedList_Semesters lSemest
     return NULL;
 }
 
-void Staff::addHeadSemester(LinkedList_Semesters& lSemesters, Semester semester){
+void Staff::addHeadSemester(LinkedList_Semesters* lSemesters, const Semester& semester){
     NodeSemester* pNodeSemester = new NodeSemester(semester);
-    pNodeSemester->next = lSemesters.head;
-    lSemesters.head = pNodeSemester;
-    if(lSemesters.tail == NULL) lSemesters.tail = lSemesters.head;
+    pNodeSemester->next = lSemesters->head;
+    lSemesters->head = pNodeSemester;
+    if(lSemesters->tail == NULL) lSemesters->tail = lSemesters->head;
 }
 
-void Staff::addTailSemester(LinkedList_Semesters& lSemesters, Semester semester){
+void Staff::addTailSemester(LinkedList_Semesters* lSemesters, const Semester& semester){
     NodeSemester* pNodeSemester = new NodeSemester(semester);
-    if(lSemesters.tail == NULL){
-        lSemesters.head = lSemesters.tail = pNodeSemester;
+    if(lSemesters->tail == NULL){
+        lSemesters->head = lSemesters->tail = pNodeSemester;
         return;
     }
-    lSemesters.tail->next = pNodeSemester;
-    lSemesters.tail = pNodeSemester;
+    lSemesters->tail->next = pNodeSemester;
+    lSemesters->tail = pNodeSemester;
 }
 
-void Staff::addBeforeSemester(LinkedList_Semesters& lSemesters, NodeSemester* pNodeSemesterBefore, Semester semester){
+void Staff::addBeforeSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterBefore, const Semester& semester){
     if(pNodeSemesterBefore == NULL) return;
-    if(pNodeSemesterBefore == lSemesters.head){
+    if(pNodeSemesterBefore == lSemesters->head){
         addHeadSemester(lSemesters, semester);
         return;
     }
@@ -577,166 +598,36 @@ void Staff::addBeforeSemester(LinkedList_Semesters& lSemesters, NodeSemester* pN
     pNodeSemester->next = pNodeSemesterBefore;
 }
 
-void Staff::addAfterSemester(LinkedList_Semesters& lSemesters, NodeSemester* pNodeSemesterAfter, Semester semester){
+void Staff::addAfterSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterAfter, const Semester& semester){
     NodeSemester* pNodeSemester = new NodeSemester(semester);
-    NodeSemester* p = lSemesters.head;
-    if(p == NULL || pNodeSemesterAfter == NULL) return;
+    if(lSemesters->head == NULL || pNodeSemesterAfter == NULL) return;
+    NodeSemester* p = lSemesters->head;
     while(p != NULL){
         if(p == pNodeSemesterAfter) break;
         p = p->next;
     }
     if(p == NULL) return;
-    p = pNodeSemesterAfter->next;
+    pNodeSemester->next = pNodeSemesterAfter->next;
     pNodeSemesterAfter->next = pNodeSemester;
-    pNodeSemester->next = p;
-    if(p == NULL){
-        lSemesters.tail = pNodeSemester;
+    if(pNodeSemesterAfter == lSemesters->tail){
+        lSemesters->tail = pNodeSemester;
     }
 }
 
-void Staff::addSemesterAtIndex(LinkedList_Semesters& lSemesters, Semester semester, int index){
+void Staff::addSemesterAtIndex(LinkedList_Semesters* lSemesters, const Semester& semester, int index){
     NodeSemester* p = getNodeSemesterPointer(lSemesters, index);
-    addAfterSemester(lSemesters, p, semester);
+    addBeforeSemester(lSemesters, p, semester);
 }
 
-void Staff::deleteSemester(LinkedList_Semesters& lSemesters, NodeSemester* pNodeSemester){
-    if(lSemesters.head == NULL) return; // Danh sách trống
+void Staff::deleteSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester) {
+    if (lSemesters->head == NULL) return; // Danh sách trống
 
-    NodeSemester* temp = lSemesters.head;
+    NodeSemester* temp = lSemesters->head;
     NodeSemester* prev = NULL;
-
-    // Tìm nút chứa semester cần xóa
-    while(temp != NULL){
-        if(temp == pNodeSemester) break;
-        prev = temp;
-        temp = temp->next;
-    }
-
-    // Nếu không tìm thấy semester cần xóa
-    if(temp == NULL) return;
-
-    // Nếu semester cần xóa là đầu danh sách
-    if(temp == lSemesters.head){
-        lSemesters.head = temp->next;
-        if(lSemesters.head == NULL){
-            lSemesters.tail = NULL; // Nếu danh sách trống sau khi xóa
-        }
-        delete temp;
-        return;
-    }
-
-    // Nếu semester cần xóa là cuối danh sách
-    if(temp == lSemesters.tail){
-        lSemesters.tail = prev;
-        lSemesters.tail->next = NULL;
-        delete temp;
-        return;
-    }
-
-    // Xóa semester ở giữa danh sách
-    prev->next = temp->next;
-    delete temp;
-}
-// ham cho SchoolYears
-NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears lSchoolYears, SchoolYear SchoolYear) {
-    NodeSchoolYear* pNodeSchoolYear = lSchoolYears.head;
-    if (pNodeSchoolYear == NULL) return NULL;
-    while (pNodeSchoolYear != NULL && (pNodeSchoolYear->data != SchoolYear)) {
-        pNodeSchoolYear = pNodeSchoolYear->next;
-    }
-    return pNodeSchoolYear;
-}
-NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears lSchoolYears, int index) {
-    NodeSchoolYear* pNodeSchoolYear = lSchoolYears.head;
-    int currentIndex = 0;
-    while (pNodeSchoolYear != NULL && currentIndex < index) {
-        pNodeSchoolYear = pNodeSchoolYear->next;
-        currentIndex++;
-    }
-    return pNodeSchoolYear;
-}
-int Staff::getNodeSchoolYearIndex(LinkedList_SchoolYears lSchoolYears, NodeSchoolYear* pNodeSchoolYear) {
-    if (lSchoolYears.head == NULL) return -1;
-    NodeSchoolYear* p = lSchoolYears.head;
-    int currentIndex = 0;
-    while (p != NULL) {
-        if (p == pNodeSchoolYear) {
-            return currentIndex;
-        }
-        p = p->next;
-        currentIndex++;
-    }
-    return -1;
-}
-NodeSchoolYear* Staff::getPreviousNodeSchoolYearPointer(LinkedList_SchoolYears lSchoolYears, NodeSchoolYear* pNodeSchoolYear) {
-    NodeSchoolYear* p = lSchoolYears.head;
-    NodeSchoolYear* pPrev = NULL;
-    while (p != NULL) {
-        if (p == pNodeSchoolYear) {
-            return pPrev;
-        }
-        pPrev = p;
-        p = p->next;
-    }
-    return NULL;
-}
-void Staff::addHeadSchoolYear(LinkedList_SchoolYears& lSchoolYears, SchoolYear SchoolYear) {
-    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(SchoolYear);
-    pNodeSchoolYear->next = lSchoolYears.head;
-    lSchoolYears.head = pNodeSchoolYear;
-    if (lSchoolYears.tail == NULL) lSchoolYears.tail = lSchoolYears.head;
-}
-void Staff::addTailSchoolYear(LinkedList_SchoolYears& lSchoolYears, SchoolYear SchoolYear) {
-
-    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(SchoolYear);
-    if (lSchoolYears.tail == NULL) {
-        lSchoolYears.head = lSchoolYears.tail = pNodeSchoolYear;
-        return;
-    }
-    lSchoolYears.tail->next = pNodeSchoolYear;
-    lSchoolYears.tail = pNodeSchoolYear;
-}
-void Staff::addBeforeSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, SchoolYear SchoolYear) {
-    if (pNodeSchoolYearBefore == NULL) return;
-    if (pNodeSchoolYearBefore == lSchoolYears.head) {
-        addHeadSchoolYear(lSchoolYears, SchoolYear);
-        return;
-    }
-    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(SchoolYear);
-    NodeSchoolYear* p = getPreviousNodeSchoolYearPointer(lSchoolYears, pNodeSchoolYearBefore);
-    if (p == NULL) return;
-    p->next = pNodeSchoolYear;
-    pNodeSchoolYear->next = pNodeSchoolYearBefore;
-}
-void Staff::addAfterSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, SchoolYear SchoolYear) {
-    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(SchoolYear);
-    NodeSchoolYear* p = lSchoolYears.head;
-    if (p == NULL || pNodeSchoolYearAfter == NULL) return;
-    while (p != NULL) {
-        if (p == pNodeSchoolYearAfter) break;
-        p = p->next;
-    }
-    if (p == NULL) return;
-    p = pNodeSchoolYearAfter->next;
-    pNodeSchoolYearAfter->next = pNodeSchoolYear;
-    pNodeSchoolYear->next = p;
-    if (p == NULL) {
-        lSchoolYears.tail = pNodeSchoolYear;
-    }
-}
-void Staff::addSchoolYearAtIndex(LinkedList_SchoolYears& lSchoolYears, SchoolYear SchoolYear, int index) {
-    NodeSchoolYear* p = getNodeSchoolYearPointer(lSchoolYears, index);
-    addAfterSchoolYear(lSchoolYears, p, SchoolYear);
-}
-void Staff::deleteSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYear* pNodeSchoolYear) {
-    if (lSchoolYears.head == NULL) return; // Danh sách trống
-
-    NodeSchoolYear* temp = lSchoolYears.head;
-    NodeSchoolYear* prev = NULL;
 
     // Tìm nút chứa khóa học cần xóa
     while (temp != NULL) {
-        if (temp == pNodeSchoolYear) break;
+        if(temp == pNodeSemester) break;
         prev = temp;
         temp = temp->next;
     }
@@ -745,24 +636,158 @@ void Staff::deleteSchoolYear(LinkedList_SchoolYears& lSchoolYears, NodeSchoolYea
     if (temp == NULL) return;
 
     // Nếu khóa học cần xóa là đầu danh sách
-    if (temp == lSchoolYears.head) {
-        lSchoolYears.head = temp->next;
-        if (lSchoolYears.head == NULL) {
-            lSchoolYears.tail = NULL; // Nếu danh sách trống sau khi xóa
+    if (temp == lSemesters->head) {
+        lSemesters->head = temp->next;
+        if (lSemesters->head == NULL) {
+            lSemesters->tail = NULL; // Nếu danh sách trống sau khi xóa
         }
         delete temp;
         return;
     }
 
     // Nếu khóa học cần xóa là cuối danh sách
-    if (temp == lSchoolYears.tail) {
-        lSchoolYears.tail = prev;
-        lSchoolYears.tail->next = NULL;
+    if (temp == lSemesters->tail) {
+        lSemesters->tail = prev;
+        lSemesters->tail->next = NULL;
         delete temp;
         return;
     }
 
     // Xóa khóa học ở giữa danh sách
+    prev->next = temp->next;
+    delete temp;
+}
+// ham cho SchoolYears
+
+
+NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear){
+    NodeSchoolYear* pNodeSchoolYear = lSchoolYears->head;
+    while(pNodeSchoolYear != NULL && (pNodeSchoolYear->data != schoolyear)){
+        pNodeSchoolYear = pNodeSchoolYear->next;
+    }
+    return pNodeSchoolYear;
+}
+
+NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, int index){
+    NodeSchoolYear* pNodeSchoolYear = lSchoolYears->head;
+    int currentIndex = 0;
+    while(pNodeSchoolYear != NULL && currentIndex < index){
+        pNodeSchoolYear = pNodeSchoolYear->next;
+        currentIndex++;
+    }
+    return pNodeSchoolYear;
+}
+
+int Staff::getNodeSchoolYearIndex(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear){
+    if(lSchoolYears->head == NULL) return -1;
+    NodeSchoolYear* p = lSchoolYears->head;
+    int currentIndex = 0;
+    while(p != NULL){
+        if(p == pNodeSchoolYear){
+            return currentIndex;
+        }
+        p = p->next;
+        currentIndex++;
+    }
+    return -1;
+}
+
+NodeSchoolYear* Staff::getPreviousNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear){
+    NodeSchoolYear* p = lSchoolYears->head;
+    NodeSchoolYear* pPrev = NULL;
+    while(p != NULL){
+        if(p == pNodeSchoolYear){
+            return pPrev;
+        }
+        pPrev = p;
+        p = p->next;
+    }
+    return NULL;
+}
+
+void Staff::addHeadSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear){
+    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(schoolyear);
+    pNodeSchoolYear->next = lSchoolYears->head;
+    lSchoolYears->head = pNodeSchoolYear;
+    if(lSchoolYears->tail == NULL) lSchoolYears->tail = lSchoolYears->head;
+}
+
+void Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear){
+    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(schoolyear);
+    if(lSchoolYears->tail == NULL){
+        lSchoolYears->head = lSchoolYears->tail = pNodeSchoolYear;
+        return;
+    }
+    lSchoolYears->tail->next = pNodeSchoolYear;
+    lSchoolYears->tail = pNodeSchoolYear;
+}
+
+void Staff::addBeforeSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, const SchoolYear& schoolyear){
+    if(pNodeSchoolYearBefore == NULL) return;
+    if(pNodeSchoolYearBefore == lSchoolYears->head){
+        addHeadSchoolYear(lSchoolYears, schoolyear);
+        return;
+    }
+    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(schoolyear);
+    NodeSchoolYear* p = getPreviousNodeSchoolYearPointer(lSchoolYears, pNodeSchoolYearBefore);
+    if(p == NULL) return;
+    p->next = pNodeSchoolYear;
+    pNodeSchoolYear->next = pNodeSchoolYearBefore;
+}
+
+void Staff::addAfterSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, const SchoolYear& schoolyear){
+    NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(schoolyear);
+    if(lSchoolYears->head == NULL || pNodeSchoolYearAfter == NULL) return;
+    NodeSchoolYear* p = lSchoolYears->head;
+    while(p != NULL){
+        if(p == pNodeSchoolYearAfter) break;
+        p = p->next;
+    }
+    if(p == NULL) return;
+    pNodeSchoolYear->next = pNodeSchoolYearAfter->next;
+    pNodeSchoolYearAfter->next = pNodeSchoolYear;
+    if(pNodeSchoolYearAfter == lSchoolYears->tail){
+        lSchoolYears->tail = pNodeSchoolYear;
+    }
+}
+
+void Staff::addSchoolYearAtIndex(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear, int index){
+    NodeSchoolYear* p = getNodeSchoolYearPointer(lSchoolYears, index);
+    addBeforeSchoolYear(lSchoolYears, p, schoolyear);
+}
+
+void Staff::deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear) {
+    if (lSchoolYears->head == NULL) return; // Danh sách trống
+
+    NodeSchoolYear* temp = lSchoolYears->head;
+    NodeSchoolYear* prev = NULL;
+
+    // Tìm nút chứa khóa học cần xóa
+    while (temp != NULL) {
+        if(temp == pNodeSchoolYear) break;
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) return;
+
+    if (temp == lSchoolYears->head) {
+        lSchoolYears->head = temp->next;
+        if (lSchoolYears->head == NULL) {
+            lSchoolYears->tail = NULL;
+        }
+        delete temp;
+        return;
+    }
+
+
+    if (temp == lSchoolYears->tail) {
+        lSchoolYears->tail = prev;
+        lSchoolYears->tail->next = NULL;
+        delete temp;
+        return;
+    }
+
     prev->next = temp->next;
     delete temp;
 }

@@ -4,6 +4,7 @@ struct LinkedList_Students;
 class Staff;
 class Class {
     friend class Staff;
+// private:
 private:
     string nameClass;
     LinkedList_Students* listStudentsOfClass;
@@ -20,11 +21,10 @@ public:
 struct NodeClass{
     Class data;
     NodeClass* next;
-    NodeClass(Class Class);
+    NodeClass(const Class& Class);
 };
 struct LinkedList_Classes{
     NodeClass *head, *tail;
     LinkedList_Classes();
-    // Class getDataClass(NodeClass* node) const;
 };
 

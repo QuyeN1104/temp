@@ -11,13 +11,19 @@
         return (this->startDate != other.startDate || this->endDate != other.endDate /*|| this->listCourses != other.listCourses*/);
     }
     // Constructor của NodeSemester
-    NodeSemester::NodeSemester(Semester semester) : data(semester), next(nullptr) {}
+    NodeSemester::NodeSemester(const Semester& semester) : data(semester), next(nullptr) {}
 
     // Constructor mặc định của LinkedList_Semesters
     LinkedList_Semesters::LinkedList_Semesters() : head(nullptr), tail(nullptr) {}
 
-    // Semester LinkedList_Semesters::getDataSemester(NodeSemester* node) const {
-    //     return node->data;
-    // }
+    Date Semester::getStartDate() const{
+        return startDate;
+    }
+    Date Semester::getEndDate() const{
+        return endDate;
+    }
+    LinkedList_Courses* Semester::getListCourses() const{
+        return listCoursesOfSemeter;
+    }
 
 
