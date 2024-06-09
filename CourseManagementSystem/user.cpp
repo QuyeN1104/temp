@@ -4,8 +4,9 @@ User::User() : firstName(""), lastName(""), userName(""), passWord(""), gender("
 }
 
 User::User(string firstName, string lastName,string userName, string passWord, Date dateofBirth,
-string gender, string socialID)
-    : firstName(firstName), lastName(lastName), userName(userName), passWord(passWord), dateofBirth(dateofBirth), gender(gender), socialID(socialID) {}
+string gender, string socialID): firstName(firstName), lastName(lastName), userName(userName),
+    passWord(passWord), dateofBirth(dateofBirth), gender(gender), socialID(socialID) {}
+
 bool User::changePassWord(string oldPass, string newPass, string confirmNewPass) {
     if (oldPass == this->passWord && newPass == confirmNewPass) {
         this->passWord = newPass;

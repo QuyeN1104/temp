@@ -6,6 +6,9 @@
 #include"student.h"
 #include"class.h"
 
+Staff::Staff() : listClassesOfSchool(new LinkedList_Classes ()), listSchoolYearsOfSchool(new LinkedList_SchoolYears())
+    , listUsersOfSchool(new LinkedList_Users())  {}
+
 LinkedList_Classes* Staff::getListClassesOfSchool() const {
     return this->listClassesOfSchool;
 }

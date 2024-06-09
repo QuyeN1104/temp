@@ -15,5 +15,4 @@ int main() {
     a.addHeadStudent(list,d);
     delete list;
     return 0;
-
 }

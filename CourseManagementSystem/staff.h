@@ -29,6 +29,7 @@ private:
     LinkedList_Users* listUsersOfSchool;
 public:
     // các hàm getter
+    Staff();
     LinkedList_Classes* getListClassesOfSchool() const;
 
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
@@ -44,11 +45,13 @@ public:
     void change_session(Course& course,string newSession);
     void change_dayofWeek(Course& course,string newDayofWeek);
     void change_maxStudents(Course& course,int newMaxStudens);
+
     // các hàm làm việc vơí file
     // int countLines(const string& filename);
     // string** processCsvFile(const string& fileDirection, int& numRows);
     // void deletePointerData(string** s, int numRows);
     // void loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string& fileDirection);
+
     // hàm Course
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, int index);
