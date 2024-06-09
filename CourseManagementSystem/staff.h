@@ -113,4 +113,12 @@ public:
     void addAfterSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, const SchoolYear& schoolyear);
     void addSchoolYearAtIndex(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear, int index);
     void deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
+
+    // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
+
+    LinkedList_Students* listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass);
+    // ex : 23_s2 23_s1 cùng thuộc mã MATH001 môn VI TÍCH PHÂN
+    LinkedList_Classes* listClassesInYear(const string& nameYear);
+    LinkedList_Students* findListStudentsOfACourseInYear(const string& nameYear, const string nameClass);
+
 };

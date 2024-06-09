@@ -26,6 +26,5 @@ struct NodeSchoolYear {
 struct LinkedList_SchoolYears {
     NodeSchoolYear* head, *tail;
     LinkedList_SchoolYears();
-    SchoolYear* findSchoolYearByName(const string& nameSchoolYear);
 };
 
