@@ -24,19 +24,38 @@ struct NodeCourse;
 
 class Staff : public User {
 private:
-    LinkedList_Classes*  listClassesOfSchool;
-    LinkedList_SchoolYears* listSchoolYearsOfSchool;
-    LinkedList_Users* listUsersOfSchool;
+     LinkedList_Classes*  listClassesOfSchool;
+     LinkedList_SchoolYears* listSchoolYearsOfSchool;
+     LinkedList_Users* listUsersOfSchool;
 public:
     // các hàm getter
     Staff();
     LinkedList_Classes* getListClassesOfSchool() const;
-
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
-
     LinkedList_Users* getListUsersOfSchool() const;
 
-    // SchoolYear getSchoolYear()
+    // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
+    // Tìm 1 kì học trong danh sách lớp
+    NodeSemester* findSemesterInYear( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
+
+    // trả về danh sách sinh viên của 1 môn học bằng mã lớp
+    // ex : 23_s2 23_s1 cùng thuộc mã MATH001 môn VI TÍCH PHÂN
+    LinkedList_Students* listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass);
+
+    // trả về danh sách lớp của 1 năm học (k23,k24,..)
+    LinkedList_Classes* listClassesInYear(const string& nameYear);
+
+    // trả về danh sách sinh viên của lớp đó
+    LinkedList_Students* findListStudentsOfAClassInYear(const string& nameYear, const string nameClass);
+
+    //Tìm 1 học sinh trong danh sách các lớp
+    NodeStudent* findStudentByID(LinkedList_Classes* lClasses, const string& mssv);
+
+    // Tìm Danh Sách khóa học của 1 học sinh trong 1 kì
+    LinkedList_Courses* listCourseOfStudent(const string& mssv, const string& nameYear, const string& nameSemester);
+
+    // Trả về danh sách các môn học của 1 học kì
+    LinkedList_Courses* listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
 
     // các hàm thay đổi thông tin khóa học, lớp, ...
     void change_idCourse(Course& course,string newIdCourse);
@@ -49,10 +68,10 @@ public:
     void change_maxStudents(Course& course,int newMaxStudens);
 
     // các hàm làm việc vơí file
-    // int countLines(const string& filename);
-    // string** processCsvFile(const string& fileDirection, int& numRows);
-    // void deletePointerData(string** s, int numRows);
-    // void loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string& fileDirection);
+    int countLines(const string& filename);
+    string** processCsvFile(const string& fileDirection, int& numRows);
+    void deletePointerData(string** s, int numRows);
+    void loadStudentsFromCsvfile(LinkedList_Students* lStudents,const string& fileDirection);
 
     // hàm Course
     NodeCourse* getNodeCoursePointerByName(LinkedList_Courses* lCourses, const string& nameClass);
@@ -67,6 +86,7 @@ public:
     void addCourseAtIndex(LinkedList_Courses* lCourses, const Course& course, int index);
     void deleteCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
     // hàm cho Student
+    NodeStudent* getNodeStudentPointerByID(LinkedList_Students* lStudents, const string& mssv);
     NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, const Student& student);
     NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, int index);
     int getNodeStudentIndex(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
@@ -113,12 +133,4 @@ public:
     void addAfterSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, const SchoolYear& schoolyear);
     void addSchoolYearAtIndex(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear, int index);
     void deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
-
-    // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
-
-    LinkedList_Students* listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass);
-    // ex : 23_s2 23_s1 cùng thuộc mã MATH001 môn VI TÍCH PHÂN
-    LinkedList_Classes* listClassesInYear(const string& nameYear);
-    LinkedList_Students* findListStudentsOfACourseInYear(const string& nameYear, const string nameClass);
-
 };

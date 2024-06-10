@@ -3,13 +3,18 @@
 #include "user.h"
 struct LinkedList_SchoolYears;
 class Student : public User {
-public:
+private:
     string studentID;
     string enrolledClass;
-public:
     LinkedList_SchoolYears* dataOfStudents;
+public:
     Student();
+    Student(string* data,string nameClass);
+    string getStudentID() const;
+    string getEnrolledClass() const;
+    LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
     bool operator !=(const Student& other) const;
+
 };
 struct NodeStudent{
     Student data;

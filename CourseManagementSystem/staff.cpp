@@ -10,15 +10,15 @@ Staff::Staff() : listClassesOfSchool(new LinkedList_Classes ()), listSchoolYears
     , listUsersOfSchool(new LinkedList_Users()) {}
 
 LinkedList_Classes* Staff::getListClassesOfSchool() const {
-    return this->listClassesOfSchool;
+    return listClassesOfSchool;
 }
 
 LinkedList_SchoolYears* Staff::getListSchoolYearsOfSchool() const {
-    return this->listSchoolYearsOfSchool;
+    return listSchoolYearsOfSchool;
 }
 
 LinkedList_Users* Staff::getListUsersOfSchool() const {
-    return this->listUsersOfSchool;
+    return listUsersOfSchool;
 }
 //
 void Staff::change_idCourse(Course& course,string newIdCourse){
@@ -47,69 +47,76 @@ void Staff::change_dayofWeek(Course& course,string newDayofWeek){
 void Staff::change_maxStudents(Course& course,int newMaxStudens){
     course.maxStudents = newMaxStudens;
 }
-// int Staff::countLines(const string& filename) {
-//     ifstream file;
-//     file.open(filename,ios::in);
-//     if (!file.is_open()) {
-//         return -1;
-//     }
+int Staff::countLines(const string& filename) {
+    ifstream file;
+    file.open(filename,ios::in);
+    if (!file.is_open()) {
+        return -1;
+    }
 
-//     int lineCount = 0;
-//     string line;
-//     while (getline(file,line)) {
-//         ++lineCount;
-//     }
-//     lineCount--; // trừ hàng đầu tiên chứa các trường dữ liệu
-//     file.close();
-//     return lineCount;
-// }
-// string** Staff::processCsvFile(const string& fileDirection, int& numRows){
-//     ifstream file(fileDirection,ios::in);
-//     if(!file.is_open()){
-//         return nullptr;
-//     }
-//     // cap phat o nho
-//     numRows = countLines(fileDirection);
-//     string** pString = new string* [numRows];
-//     for(int i = 0; i < numRows; i++){
-//         pString[i] = new string [numCsvCols];
-//     }
-//     // bỏ qua hàng tiêu đề đầu tiên
-//     string header;
-//     getline(file,header);
-//     // bắt đầu đọc dữ liệu
-//     string line;
-//     int row = 0;
-//     while(getline(file,line)){
-//         stringstream ss(line);
-//         int col = 0;
-//         string cell;
-//         while (getline(ss, cell, ',')) {
-//             pString[row][col] = cell;
-//             ++col;
-//         }
-//         ++row;
-//     }
-//     file.close();
-//     return pString;
-// }
-// void Staff::deletePointerData(string** s, int numRows){
-//     for(int i = 0; i < numRows; i++){
-//         delete [] s[i];
-//         s[i] = nullptr;
-//     }
-//     delete [] s;
-// }
-// void Staff::loadStudentsFromCsvfile(LinkedList_Students& lStudents,const string& fileDirection){
-//     int numRows;
-//     string** data = processCsvFile(fileDirection,numRows);
-//     for(int i = 0; i < numRows; i++){
-//         // gán từng data[i] vào các NodeStudent
-//         // Student student(data[i]);
-//         addTailStudent(lStudents,student);
-//     }
-//     deletePointerData(data,numRows);
-// }
+    int lineCount = 0;
+    string line;
+    while (getline(file,line)) {
+        ++lineCount;
+    }
+    lineCount--; // trừ hàng đầu tiên chứa các trường dữ liệu
+    file.close();
+    return lineCount;
+}
+string** Staff::processCsvFile(const string& fileDirection, int& numRows){
+    ifstream file(fileDirection,ios::in);
+    if(!file.is_open()){
+        return nullptr;
+    }
+    // cap phat o nho
+    numRows = countLines(fileDirection);
+    string** pString = new string* [numRows];
+    for(int i = 0; i < numRows; i++){
+        pString[i] = new string [numCsvCols];
+    }
+    // bỏ qua hàng tiêu đề đầu tiên
+    string header;
+    getline(file,header);
+    // bắt đầu đọc dữ liệu
+    string line;
+    int row = 0;
+    while(getline(file,line)){
+        stringstream ss(line);
+        int col = 0;
+        string cell;
+        int isSTT = 1; // kiểm tra có phải là cột stt không (do không đọc số thứ tự)
+        while (getline(ss, cell, ',')) {
+            if(isSTT == 0){
+            pString[row][col] = cell;
+            ++col;
+            }
+            isSTT = 0;
+        }
+        ++row;
+    }
+    file.close();
+    return pString;
+}
+void Staff::deletePointerData(string** s, int numRows){
+    for(int i = 0; i < numRows; i++){
+        delete [] s[i];
+        s[i] = nullptr;
+    }
+    delete [] s;
+}
+// fileDirection ex : 23CTT5.csv
+void Staff::loadStudentsFromCsvfile(LinkedList_Students* lStudents,const string& fileDirection){
+    int numRows;
+    string** data = processCsvFile(fileDirection,numRows);
+    string nameClass = splitNameClassFromFile(fileDirection);
+    if(data == NULL) return;
+    for(int i = 0; i < numRows; i++){
+        // gán từng data[i] vào các NodeStudent
+        Student student(data[i],nameClass);
+        addTailStudent(lStudents,student);
+    }
+    deletePointerData(data,numRows);
+}
 
 // hàm cho Course
 
@@ -262,7 +269,17 @@ void Staff::deleteCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse) 
     delete temp;
 }
 
+NodeStudent* Staff::getNodeStudentPointerByID(LinkedList_Students* lStudents, const string& mssv){
+    if(lStudents == NULL || lStudents->head == NULL ) return NULL;
+    NodeStudent* pNodeStudent = lStudents->head;
+    while(pNodeStudent != NULL && (pNodeStudent->data.getStudentID() != mssv)){
+        pNodeStudent = pNodeStudent->next;
+    }
+    return pNodeStudent;
+}
+
 NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, const Student& student){
+    if(lStudents == NULL || lStudents->head == NULL ) return NULL;
     NodeStudent* pNodeStudent = lStudents->head;
     while(pNodeStudent != NULL && (pNodeStudent->data != student)){
         pNodeStudent = pNodeStudent->next;
@@ -830,7 +847,7 @@ void Staff::deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYea
     delete temp;
 }
 
-
+//
 LinkedList_Students* Staff::listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass){
     NodeSchoolYear* nodeSchoolYear = getNodeSchoolYearPointerByName(getListSchoolYearsOfSchool(), nameYear);
     if(nodeSchoolYear == NULL) return NULL;
@@ -849,7 +866,7 @@ LinkedList_Students* Staff::listStudentsOfCourse(const string& nameYear, const s
 LinkedList_Classes* Staff::listClassesInYear(const string& nameYear){
     // duyệt qua danh sách class lớp của trường
     LinkedList_Classes* listClasses = getListClassesOfSchool();
-    if(listClasses == NULL) return NULL;
+    if(listClasses == NULL || listClasses->head == NULL) return NULL;
     LinkedList_Classes* listClassesInYear = new LinkedList_Classes;
     NodeClass* tmp = listClasses->head;
     while(tmp != NULL){
@@ -861,10 +878,39 @@ LinkedList_Classes* Staff::listClassesInYear(const string& nameYear){
     }
     return listClassesInYear;
 }
-LinkedList_Students* Staff::findListStudentsOfACourseInYear(const string& nameYear, const string nameClass){
+LinkedList_Students* Staff::findListStudentsOfAClassInYear(const string& nameYear, const string nameClass){
     LinkedList_Classes* ClassesInYear = listClassesInYear(nameYear);
     if(ClassesInYear == NULL) return NULL;
     NodeClass* nodeClass = getNodeClassPointerByName(ClassesInYear,nameClass);
     if(nodeClass == NULL) return NULL;
     return nodeClass->data.getListStudents();
+}
+NodeStudent* Staff::findStudentByID(LinkedList_Classes* lClasses,const string& mssv){
+    if(lClasses == NULL || lClasses->head == NULL) return NULL;
+    NodeClass* tmp = lClasses->head;
+    while(tmp != NULL){
+        NodeStudent* pStudent = getNodeStudentPointerByID(tmp->data.getListStudents(),mssv);
+        if(pStudent != NULL) return pStudent;
+        tmp = tmp->next;
+    }
+    return NULL;
+}
+NodeSemester* Staff::findSemesterInYear(LinkedList_SchoolYears* lSchoolYears ,const string& nameYear, const string& nameSemester){
+    NodeSchoolYear* pYear = getNodeSchoolYearPointerByName(lSchoolYears,nameYear);
+    if(pYear == 0) return NULL;
+    return getNodeSemesterPointerByName(pYear->data.getListSemesters(),nameSemester);
+}
+
+LinkedList_Courses* Staff::listCourseOfStudent(const string& mssv, const string& nameYear, const string& nameSemester){
+    NodeStudent* pStudent = findStudentByID(getListClassesOfSchool(),mssv);
+    if(pStudent == NULL) return NULL;
+    NodeSemester* pSemester = findSemesterInYear(pStudent->data.getListSchoolYearsOfSchool(),nameYear,nameSemester);
+    if(pSemester == NULL) return NULL;
+    return pSemester->data.getListCourses();
+}
+
+LinkedList_Courses* Staff::listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester){
+    NodeSemester* pSemester = findSemesterInYear(lSchoolYears,nameYear,nameSemester);
+    if(pSemester == NULL) return NULL;
+    return pSemester->data.getListCourses();
 }

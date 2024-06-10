@@ -26,19 +26,19 @@ string User::getGender() const{
     return gender;
 }
 // Các hàm setter
-void User::setFirstName(const std::string& newFirstName) {
+void User::setFirstName(const string& newFirstName) {
     firstName = newFirstName;
 }
 
-void User::setLastName(const std::string& newLastName) {
+void User::setLastName(const string& newLastName) {
     lastName = newLastName;
 }
 
-void User::setUserName(const std::string& newUserName) {
+void User::setUserName(const string& newUserName) {
     userName = newUserName;
 }
 
-void User::setPassWord(const std::string& newPassWord) {
+void User::setPassWord(const string& newPassWord) {
     passWord = newPassWord;
 }
 
@@ -46,11 +46,11 @@ void User::setDateOfBirth(const Date& newDateOfBirth) {
     dateOfBirth = newDateOfBirth;
 }
 
-void User::setGender(const std::string& newGender) {
+void User::setGender(const string& newGender) {
     gender = newGender;
 }
 
-void User::setSocialID(const std::string& newSocialID) {
+void User::setSocialID(const string& newSocialID) {
     socialID = newSocialID;
 }
 

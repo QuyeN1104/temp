@@ -1,14 +1,21 @@
 #pragma once
-#include<bits/stdc++.h>
+#include<iostream>
+#include<string>
+#include<fstream>
+#include<cstring>
+#include<cstdlib>
+#include<sstream>
 using namespace std;
-#define numCsvCols 7
+#define numCsvCols 6
 #define defaultUserName  "_admin_hcmus";
 #define defaultPassWord  "admin@_-";
+#define defaultPassWordStudent "helloworld"
 
-     struct Date {
-        int day, month, year;
-        bool operator!=(const Date& other) const {
-            return (day != other.day || month != other.month || year != other.year);
-        }
-    };
-
+struct Date {
+int day, month, year;
+bool operator!=(const Date& other) const ;
+};
+string normalizeDateOfBirth(string s);
+Date stringToDate(const string& sDate);
+string dateToString(const Date& date);
+string splitNameClassFromFile(const string& fileDirection);
