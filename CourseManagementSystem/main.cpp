@@ -14,8 +14,10 @@ int main() {
     NodeStudent* p = l->head;
     if(!p) cout << "hello";
     while(p != NULL){
-        cout << p->data.getLastName() << " " << dateToString(p->data.getDateOfBirth()) <<  endl;
+        cout << p->data.getFirstName() << " " << dateToString(p->data.getDateOfBirth())   <<  endl;
         p = p->next;
     }
+    Staff sd;
+    cout << sd.getDateOfBirth().day;
     return 0;
 }

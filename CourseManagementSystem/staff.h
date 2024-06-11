@@ -10,7 +10,6 @@ class Student;
 class Semester;
 
 struct LinkedList_Classes;
-struct LinkedList_Users;
 struct LinkedList_SchoolYears;
 struct LinkedList_Courses;
 struct LinkedList_Students;
@@ -24,15 +23,13 @@ struct NodeCourse;
 
 class Staff : public User {
 private:
-     LinkedList_Classes*  listClassesOfSchool;
-     LinkedList_SchoolYears* listSchoolYearsOfSchool;
-     LinkedList_Users* listUsersOfSchool;
+     static LinkedList_Classes*  listClassesOfSchool;
+     static LinkedList_SchoolYears* listSchoolYearsOfSchool;
 public:
     // các hàm getter
     Staff();
     LinkedList_Classes* getListClassesOfSchool() const;
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
-    LinkedList_Users* getListUsersOfSchool() const;
 
     // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
     // Tìm 1 kì học trong danh sách lớp
@@ -42,7 +39,7 @@ public:
     // ex : 23_s2 23_s1 cùng thuộc mã MATH001 môn VI TÍCH PHÂN
     LinkedList_Students* listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass);
 
-    // trả về danh sách lớp của 1 năm học (k23,k24,..)
+    // trả về danh sách các lớp của 1 năm học (k23,k24,..)
     LinkedList_Classes* listClassesInYear(const string& nameYear);
 
     // trả về danh sách sinh viên của lớp đó

@@ -6,9 +6,18 @@
 #include"student.h"
 #include"class.h"
 
-Staff::Staff() : listClassesOfSchool(new LinkedList_Classes ()), listSchoolYearsOfSchool(new LinkedList_SchoolYears())
-    , listUsersOfSchool(new LinkedList_Users()) {}
+//khởi tạo giá trị biến static
+LinkedList_Classes* Staff::listClassesOfSchool = nullptr;
+LinkedList_SchoolYears* Staff::listSchoolYearsOfSchool = nullptr;
 
+Staff::Staff() {
+    if (listClassesOfSchool == nullptr) {
+        listClassesOfSchool = new LinkedList_Classes();
+    }
+    if (listSchoolYearsOfSchool == nullptr) {
+        listSchoolYearsOfSchool = new LinkedList_SchoolYears();
+    }
+}
 LinkedList_Classes* Staff::getListClassesOfSchool() const {
     return listClassesOfSchool;
 }
@@ -17,9 +26,6 @@ LinkedList_SchoolYears* Staff::getListSchoolYearsOfSchool() const {
     return listSchoolYearsOfSchool;
 }
 
-LinkedList_Users* Staff::getListUsersOfSchool() const {
-    return listUsersOfSchool;
-}
 //
 void Staff::change_idCourse(Course& course,string newIdCourse){
     course.idCourse = newIdCourse;
@@ -871,7 +877,7 @@ LinkedList_Classes* Staff::listClassesInYear(const string& nameYear){
     NodeClass* tmp = listClasses->head;
     while(tmp != NULL){
         string nameClass = tmp->data.getNameClass();
-        if(nameClass.substr(0,2)==nameYear.substr(0,2)){
+        if(nameClass.substr(0,2)==nameYear.substr(2,2)){ // so khớp 23CTT5 vs 2023-2024
             addTailClass(listClassesInYear,tmp->data);
         }
         tmp = tmp->next;

@@ -27,14 +27,4 @@ public:
     void setDateOfBirth(const Date& newDateOfBirth);
     void setGender(const string& newGender);
     void setSocialID(const string& newSocialID);
-
-};
-struct NodeUser {
-    User data;
-    NodeUser* next;
-    NodeUser(const User& user);
-};
-struct LinkedList_Users {
-    NodeUser* head, * tail;
-    LinkedList_Users();
 };

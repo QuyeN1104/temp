@@ -65,5 +65,3 @@ bool User::changePassWord(string oldPass, string newPass, string confirmNewPass)
     }
     return false;
 }
-NodeUser::NodeUser(const User &user) : data(user), next(nullptr) {}
-LinkedList_Users::LinkedList_Users() : head(nullptr), tail(nullptr) {}
