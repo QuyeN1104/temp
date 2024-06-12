@@ -7,17 +7,11 @@
 #include "class.h"
 
 int main() {
-    Course s;
-    LinkedList_Students* l = s.getListStudents();
+    Class s;
     Staff a;
-    a.loadStudentsFromCsvfile(l,"D:/16CTT3.csv");
-    NodeStudent* p = l->head;
-    if(!p) cout << "hello";
-    while(p != NULL){
-        cout << p->data.getFirstName() << " " << dateToString(p->data.getDateOfBirth())   <<  endl;
-        p = p->next;
-    }
-    Staff sd;
-    cout << sd.getDateOfBirth().day;
+    a.loadStudentsInClass(&s,"D:/16CTT3.csv");
+    a.addTailClass(a.getListClassesOfSchool(),s);
+    NodeStudent* sdd = a.findStudentByID(a.getListClassesOfSchool(),"20120278");
+    cout << sdd->data.getEnrolledClass();
     return 0;
 }

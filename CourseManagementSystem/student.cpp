@@ -2,6 +2,18 @@
 #include "schoolyear.h"
 Student::Student() : studentID(""),enrolledClass("") {}
 
+Student::Student(string* data) {
+    int i = 0;
+    this->studentID = data[i++];
+    this->lastName = data[i++];
+    this->firstName = data[i++];
+    this->gender = data[i++];
+    string tmp = data[i++];
+    this->dateOfBirth = stringToDate(tmp);
+    this->socialID = data[i++];
+    this->userName = this->studentID;
+    this->passWord = defaultPassWordStudent;
+}
 Student::Student(string* data,string nameClass) {
     int i = 0;
     this->studentID = data[i++];

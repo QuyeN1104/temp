@@ -9,6 +9,7 @@ private:
     LinkedList_SchoolYears* dataOfStudents;
 public:
     Student();
+    Student(string* data);
     Student(string* data,string nameClass);
     string getStudentID() const;
     string getEnrolledClass() const;

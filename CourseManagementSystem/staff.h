@@ -54,6 +54,12 @@ public:
     // Trả về danh sách các môn học của 1 học kì
     LinkedList_Courses* listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
 
+    // hàm load sinh viên vào một class
+    void loadStudentsInClass(Class* Class,const string& fileDirection);
+
+    // hàm load sinh viên cho 1 lớp học
+    void loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester);
+
     // các hàm thay đổi thông tin khóa học, lớp, ...
     void change_idCourse(Course& course,string newIdCourse);
     void change_nameCourse(Course& course,string newNameCourse);
@@ -68,8 +74,6 @@ public:
     int countLines(const string& filename);
     string** processCsvFile(const string& fileDirection, int& numRows);
     void deletePointerData(string** s, int numRows);
-    void loadStudentsFromCsvfile(LinkedList_Students* lStudents,const string& fileDirection);
-
     // hàm Course
     NodeCourse* getNodeCoursePointerByName(LinkedList_Courses* lCourses, const string& nameClass);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course);

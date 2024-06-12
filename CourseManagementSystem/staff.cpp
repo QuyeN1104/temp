@@ -111,15 +111,30 @@ void Staff::deletePointerData(string** s, int numRows){
     delete [] s;
 }
 // fileDirection ex : 23CTT5.csv
-void Staff::loadStudentsFromCsvfile(LinkedList_Students* lStudents,const string& fileDirection){
+void Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
     int numRows;
     string** data = processCsvFile(fileDirection,numRows);
-    string nameClass = splitNameClassFromFile(fileDirection);
     if(data == NULL) return;
+    string nameClass = splitNameClassFromFile(fileDirection);
     for(int i = 0; i < numRows; i++){
         // gán từng data[i] vào các NodeStudent
         Student student(data[i],nameClass);
-        addTailStudent(lStudents,student);
+        addTailStudent(Class->listStudentsOfClass,student);
+    }
+    deletePointerData(data,numRows);
+}
+
+void Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){
+    int numRows;
+    string** data = processCsvFile(fileDirection,numRows);
+    if(data == NULL) return;
+    for(int i = 0; i < numRows; i++){
+        // gán từng data[i] vào các NodeStudent
+        Student student(data[i]);
+        addTailStudent(course->listStudentsOfCourse,student);
+        Student* pStudent = &getNodeStudentPointer(course->listStudentsOfCourse,student)->data;
+        Semester* pSemester = &findSemesterInYear(pStudent->getListSchoolYearsOfSchool(),nameYear,nameSemester)->data;
+        addTailCourse(pSemester->listCoursesOfSemeter,*course);
     }
     deletePointerData(data,numRows);
 }
