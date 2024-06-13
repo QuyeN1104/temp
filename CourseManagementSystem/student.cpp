@@ -1,6 +1,6 @@
 #include "student.h"
 #include "schoolyear.h"
-Student::Student() : studentID(""),enrolledClass("") {}
+Student::Student() : studentID(""),enrolledClass("") , dataOfStudents(new LinkedList_SchoolYears()) {}
 
 Student::Student(string* data) {
     int i = 0;
@@ -13,19 +13,20 @@ Student::Student(string* data) {
     this->socialID = data[i++];
     this->userName = this->studentID;
     this->passWord = defaultPassWordStudent;
+    dataOfStudents = new LinkedList_SchoolYears();
 }
-Student::Student(string* data,string nameClass) {
+Student::Student(string* data,const string& nameClass) {
     int i = 0;
     this->studentID = data[i++];
     this->lastName = data[i++];
     this->firstName = data[i++];
     this->gender = data[i++];
-    string tmp = data[i++];
-    this->dateOfBirth = stringToDate(tmp);
+    this->dateOfBirth = stringToDate(data[i++]);
     this->socialID = data[i++];
     this->userName = this->studentID;
     this->passWord = defaultPassWordStudent;
     this->enrolledClass = nameClass;
+    dataOfStudents = new LinkedList_SchoolYears();
 }
 
 bool Student::operator !=(const Student& other) const{

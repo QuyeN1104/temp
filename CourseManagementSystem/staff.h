@@ -22,7 +22,7 @@ struct NodeClass;
 struct NodeCourse;
 
 class Staff : public User {
-public:
+private:
      static LinkedList_Classes*  listClassesOfSchool;
      static LinkedList_SchoolYears* listSchoolYearsOfSchool;
 public:
@@ -90,7 +90,7 @@ public:
     int getNodeCourseIndex(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
     NodeCourse* getPreviousNodeCoursePointer(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
     void addHeadCourse(LinkedList_Courses* lCourses, const Course& course);
-    void addTailCourse(LinkedList_Courses* lCourses, const Course& course);
+    Course* addTailCourse(LinkedList_Courses* lCourses, const Course& course);
     void addBeforeCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourseBefore, const Course& course);
     void addAfterCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourseAfter, const Course& course);
     void addCourseAtIndex(LinkedList_Courses* lCourses, const Course& course, int index);
@@ -101,7 +101,7 @@ public:
     int getNodeStudentIndex(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
     NodeStudent* getPreviousNodeStudentPointer(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
     void addHeadStudent(LinkedList_Students* lStudents, const Student& student);
-    void addTailStudent(LinkedList_Students* lStudents, const Student& student);
+    Student* addTailStudent(LinkedList_Students* lStudents, const Student& student);
     void addBeforeStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudentBefore, const Student& student);
     void addAfterStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudentAfter, const Student& student);
     void addStudentAtIndex(LinkedList_Students* lStudents, const Student& student, int index);
@@ -113,7 +113,7 @@ public:
     int getNodeClassIndex(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
     NodeClass* getPreviousNodeClassPointer(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
     void addHeadClass(LinkedList_Classes* lClasses, const Class& Class);
-    void addTailClass(LinkedList_Classes* lClasses, const Class& Class);
+    Class* addTailClass(LinkedList_Classes* lClasses, const Class& Class);
     void addBeforeClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassBefore, const Class& Class);
     void addAfterClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassAfter, const Class& Class);
     void addClassAtIndex(LinkedList_Classes* lClasses, const Class& Class, int index);
@@ -124,8 +124,8 @@ public:
     int getNodeSemesterIndex(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
     NodeSemester* getPreviousNodeSemesterPointer(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
     void addHeadSemester(LinkedList_Semesters* lSemesters, const Semester& semester);
-    void addTailSemester(LinkedList_Semesters* lSemesters, const Semester& semester);
-    void addTailSemester(LinkedList_Semesters* lSemesters, const string& nameSemester);
+    Semester* addTailSemester(LinkedList_Semesters* lSemesters, const Semester& semester);
+    Semester* addTailSemester(LinkedList_Semesters* lSemesters, const string& nameSemester);
     void addBeforeSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterBefore, const Semester& semester);
     void addAfterSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterAfter, const Semester& semester);
     void addSemesterAtIndex(LinkedList_Semesters* lSemesters, const Semester& semester, int index);
@@ -136,8 +136,8 @@ public:
     int getNodeSchoolYearIndex(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
     NodeSchoolYear* getPreviousNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
     void addHeadSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
-    void addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
-    void addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolyear);
+    SchoolYear* addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
+    SchoolYear* addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolyear);
     void addBeforeSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, const SchoolYear& schoolyear);
     void addAfterSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, const SchoolYear& schoolyear);
     void addSchoolYearAtIndex(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear, int index);

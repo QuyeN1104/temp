@@ -119,40 +119,36 @@ void Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
     for(int i = 0; i < numRows; i++){
         // gán từng data[i] vào các NodeStudent
         Student student(data[i],nameClass);
-        addTailStudent(Class->listStudentsOfClass,student);
+        addTailStudent(Class->getListStudents(),student);
     }
     deletePointerData(data,numRows);
 }
 
-// void Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){
-//     int numRows;
-//     string** data = processCsvFile(fileDirection,numRows);
-//     if(data == NULL) return;
-//     for(int i = 0; i < numRows; i++){
-//         Student* student = findStudentByID(getListClassesOfSchool(),data[i][0]); // mssv được lưu trường đầu tiên trong data
-//         if(student == NULL) continue;
-//         // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
-//         addTailStudent(course->getListStudents(),*student);
-//         student = course->
-//         // thêm khóa học đó vào danh sách của học sinh
-//         // kiểm tra năm học đó có tồn tại không
-//         SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
-//         // nếu chưa tồn tại năm học đó
-//         if(year == NULL) {
-//             addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
-//         }
-//         year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
-//         Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
-//         if(semester == NULL){
-//             // Semester newSemester(nameSemester);
-//             addTailSemester(year->getListSemesters(),nameSemester);
-//         }
-//         semester = getSemesterByName(year->getListSemesters(),nameSemester);
-//         // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
-//         addTailCourse(semester->getListCourses(),*course);
-//     }
-//     deletePointerData(data,numRows);
-// }
+void Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){
+    int numRows;
+    string** data = processCsvFile(fileDirection,numRows);
+    if(data == NULL) return;
+    for(int i = 0; i < numRows; i++){
+        Student* student = findStudentByID(getListClassesOfSchool(),data[i][0]); // mssv được lưu trường đầu tiên trong data
+        if(student == NULL) continue; // không có học sinh này trong trường
+        // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
+        student = addTailStudent(course->getListStudents(),*student);
+        // thêm khóa học đó vào danh sách của học sinh
+        // kiểm tra năm học đó có tồn tại không
+        SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
+        // nếu chưa tồn tại năm học đó
+        if(year == NULL) {
+            year = addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
+        }
+        Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
+        if(semester == NULL){
+            semester = addTailSemester(year->getListSemesters(),nameSemester);
+        }
+        // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
+        addTailCourse(semester->getListCourses(),*course);
+    }
+    deletePointerData(data,numRows);
+}
 
 // hàm cho Course
 
@@ -221,16 +217,16 @@ void Staff::addHeadCourse(LinkedList_Courses* lCourses, const Course& course){
     }
 }
 
-void Staff::addTailCourse(LinkedList_Courses* lCourses, const Course& course){
+Course* Staff::addTailCourse(LinkedList_Courses* lCourses, const Course& course){
     NodeCourse* pNodeCourse = new NodeCourse(course);
-    if(pNodeCourse){
-    if(lCourses->tail == NULL){
-        lCourses->head = lCourses->tail = pNodeCourse;
-        return;
+    if(pNodeCourse == NULL || lCourses == NULL) return NULL;
+    if(lCourses->head == NULL){
+        lCourses->head = lCourses->tail =  pNodeCourse;
+        return &(pNodeCourse->data);
     }
     lCourses->tail->next = pNodeCourse;
     lCourses->tail = pNodeCourse;
-    }
+    return &(pNodeCourse->data);
 }
 
 void Staff::addBeforeCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourseBefore, const Course& course){
@@ -369,14 +365,15 @@ void Staff::addHeadStudent(LinkedList_Students* lStudents, const Student& studen
     if(lStudents->tail == NULL) lStudents->tail = lStudents->head;
 }
 
-void Staff::addTailStudent(LinkedList_Students* lStudents, const Student& student){
+Student* Staff::addTailStudent(LinkedList_Students* lStudents, const Student& student){
     NodeStudent* pNodeStudent = new NodeStudent(student);
+    if(pNodeStudent == NULL || lStudents == NULL) return NULL;
     if(lStudents->tail == NULL){
-        lStudents->head = lStudents->tail = pNodeStudent;
-        return;
+        lStudents->head = pNodeStudent;
     }
-    lStudents->tail->next = pNodeStudent;
+    else lStudents->tail->next = pNodeStudent;
     lStudents->tail = pNodeStudent;
+    return &pNodeStudent->data;
 }
 
 void Staff::addBeforeStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudentBefore, const Student& student){
@@ -514,14 +511,15 @@ void Staff::addHeadClass(LinkedList_Classes* lClasses, const Class& Class){
     if(lClasses->tail == NULL) lClasses->tail = lClasses->head;
 }
 
-void Staff::addTailClass(LinkedList_Classes* lClasses, const Class& Class){
+Class* Staff::addTailClass(LinkedList_Classes* lClasses, const Class& Class){
     NodeClass* pNodeClass = new NodeClass(Class);
+    if(lClasses == NULL || pNodeClass == NULL) return NULL;
     if(lClasses->tail == NULL){
-        lClasses->head = lClasses->tail = pNodeClass;
-        return;
+        lClasses->head = pNodeClass;
     }
-    lClasses->tail->next = pNodeClass;
+    else lClasses->tail->next = pNodeClass;
     lClasses->tail = pNodeClass;
+    return &pNodeClass->data;
 }
 
 void Staff::addBeforeClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassBefore, const Class& Class){
@@ -662,19 +660,20 @@ void Staff::addHeadSemester(LinkedList_Semesters* lSemesters, const Semester& se
     if(lSemesters->tail == NULL) lSemesters->tail = lSemesters->head;
 }
 
-void Staff::addTailSemester(LinkedList_Semesters* lSemesters, const Semester& semester){
+Semester* Staff::addTailSemester(LinkedList_Semesters* lSemesters, const Semester& semester){
     NodeSemester* pNodeSemester = new NodeSemester(semester);
+    if(pNodeSemester == NULL || lSemesters == NULL) return NULL;
     if(lSemesters->tail == NULL){
-        lSemesters->head = lSemesters->tail = pNodeSemester;
-        return;
+        lSemesters->head = pNodeSemester;
     }
-    lSemesters->tail->next = pNodeSemester;
+    else lSemesters->tail->next = pNodeSemester;
     lSemesters->tail = pNodeSemester;
+    return &pNodeSemester->data;
 }
 
-void Staff::addTailSemester(LinkedList_Semesters* lSemesters, const string& nameSemester){
+Semester* Staff::addTailSemester(LinkedList_Semesters* lSemesters, const string& nameSemester){
     Semester semester(nameSemester);
-    addTailSemester(lSemesters,semester);
+    return addTailSemester(lSemesters,semester);
 }
 
 void Staff::addBeforeSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterBefore, const Semester& semester){
@@ -814,18 +813,19 @@ void Staff::addHeadSchoolYear(LinkedList_SchoolYears* lSchoolYears, const School
     if(lSchoolYears->tail == NULL) lSchoolYears->tail = lSchoolYears->head;
 }
 
-void Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear){
+SchoolYear* Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear){
     NodeSchoolYear* pNodeSchoolYear = new NodeSchoolYear(schoolyear);
+    if(pNodeSchoolYear == NULL || lSchoolYears == NULL) return NULL;
     if(lSchoolYears->tail == NULL){
-        lSchoolYears->head = lSchoolYears->tail = pNodeSchoolYear;
-        return;
+        lSchoolYears->head = pNodeSchoolYear;
     }
-    lSchoolYears->tail->next = pNodeSchoolYear;
+    else lSchoolYears->tail->next = pNodeSchoolYear;
     lSchoolYears->tail = pNodeSchoolYear;
+    return &pNodeSchoolYear->data;
 }
-void Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolyear){
+SchoolYear* Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolyear){
     SchoolYear newSchoolyear(nameSchoolyear);
-    addTailSchoolYear(lSchoolYears,newSchoolyear);
+    return addTailSchoolYear(lSchoolYears,newSchoolyear);
 }
 
 void Staff::addBeforeSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, const SchoolYear& schoolyear){

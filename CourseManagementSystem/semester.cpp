@@ -2,11 +2,11 @@
 #include"course.h"
 
     // Constructor mặc định của Semester
-Semester::Semester() : startDate({0, 0, 0}), endDate({0, 0, 0}), nameSemester("") {}
-Semester::Semester(const string& name) : startDate({0, 0, 0}), endDate({0, 0, 0}), nameSemester(name) {}
+Semester::Semester() : startDate({0, 0, 0}), endDate({0, 0, 0}), nameSemester("") , listCoursesOfSemeter(new LinkedList_Courses()) {}
+Semester::Semester(const string& name) : startDate({0, 0, 0}), endDate({0, 0, 0}), nameSemester(name), listCoursesOfSemeter(new LinkedList_Courses()) {}
 
     // Constructor của Semester với tham số
-Semester::Semester(Date start, Date end,string name) : startDate(start), endDate(end), nameSemester(name) {}
+Semester::Semester(Date start, Date end,string name) : startDate(start), endDate(end), nameSemester(name),listCoursesOfSemeter(new LinkedList_Courses) {}
 
     bool Semester::operator!=(const Semester& other) const {
         return (this->startDate != other.startDate || this->endDate != other.endDate || this->nameSemester != other.nameSemester);

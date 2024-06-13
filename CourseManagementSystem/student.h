@@ -8,9 +8,10 @@ private:
     string enrolledClass;
     LinkedList_SchoolYears* dataOfStudents;
 public:
+    // hàm lấy 1 năm học
     Student();
     Student(string* data);
-    Student(string* data,string nameClass);
+    Student(string* data,const string& nameClass);
     string getStudentID() const;
     string getEnrolledClass() const;
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;

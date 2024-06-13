@@ -4,7 +4,6 @@ struct LinkedList_Students;
 class Staff;
 class Class {
     friend class Staff;
-// private:
 private:
     string nameClass;
     LinkedList_Students* listStudentsOfClass;
