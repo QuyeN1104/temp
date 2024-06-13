@@ -104,17 +104,20 @@ void Staff::deletePointerData(string** s, int numRows){
     delete [] s;
 }
 // fileDirection ex : 23CTT5.csv
-void Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
+bool Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
+    bool loaded = false;
     int numRows;
     string** data = processCsvFile(fileDirection,numRows);
-    if(data == NULL) return;
+    if(data == NULL) return false;
     string nameClass = splitNameClassFromFile(fileDirection);
     for(int i = 0; i < numRows; i++){
         // gán từng data[i] vào các NodeStudent
         Student student(data[i],nameClass);
         addTailStudent(Class->getListStudents(),student);
+        loaded = true;
     }
     deletePointerData(data,numRows);
+    return loaded;
 }
 
 bool Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){

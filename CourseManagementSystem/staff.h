@@ -56,7 +56,7 @@ public:
     LinkedList_Courses* listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
 
     // hàm load sinh viên vào một class
-    void loadStudentsInClass(Class* Class,const string& fileDirection);
+    bool loadStudentsInClass(Class* Class,const string& fileDirection);
 
     // hàm load sinh viên cho 1 lớp học
     bool loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester);
