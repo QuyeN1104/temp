@@ -37,3 +37,4 @@ string splitNameClassFromFile(const string& fileDirection){
         return fileDirection.substr(0, dotPosition);
     }
 }
+

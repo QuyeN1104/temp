@@ -124,20 +124,35 @@ void Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
     deletePointerData(data,numRows);
 }
 
-void Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){
-    int numRows;
-    string** data = processCsvFile(fileDirection,numRows);
-    if(data == NULL) return;
-    for(int i = 0; i < numRows; i++){
-        // gán từng data[i] vào các NodeStudent
-        Student student(data[i]);
-        addTailStudent(course->listStudentsOfCourse,student);
-        Student* pStudent = &getNodeStudentPointer(course->listStudentsOfCourse,student)->data;
-        Semester* pSemester = &findSemesterInYear(pStudent->getListSchoolYearsOfSchool(),nameYear,nameSemester)->data;
-        addTailCourse(pSemester->listCoursesOfSemeter,*course);
-    }
-    deletePointerData(data,numRows);
-}
+// void Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){
+//     int numRows;
+//     string** data = processCsvFile(fileDirection,numRows);
+//     if(data == NULL) return;
+//     for(int i = 0; i < numRows; i++){
+//         Student* student = findStudentByID(getListClassesOfSchool(),data[i][0]); // mssv được lưu trường đầu tiên trong data
+//         if(student == NULL) continue;
+//         // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
+//         addTailStudent(course->getListStudents(),*student);
+//         student = course->
+//         // thêm khóa học đó vào danh sách của học sinh
+//         // kiểm tra năm học đó có tồn tại không
+//         SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
+//         // nếu chưa tồn tại năm học đó
+//         if(year == NULL) {
+//             addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
+//         }
+//         year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
+//         Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
+//         if(semester == NULL){
+//             // Semester newSemester(nameSemester);
+//             addTailSemester(year->getListSemesters(),nameSemester);
+//         }
+//         semester = getSemesterByName(year->getListSemesters(),nameSemester);
+//         // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
+//         addTailCourse(semester->getListCourses(),*course);
+//     }
+//     deletePointerData(data,numRows);
+// }
 
 // hàm cho Course
 
@@ -150,13 +165,14 @@ NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses* lCourses, const Cour
     return pNodeCourse;
 }
 
-NodeCourse* Staff::getNodeCoursePointerByName(LinkedList_Courses* lCourses, const string& nameClass){
-    if(lCourses->head == NULL) return NULL;
+Course* Staff::getCourseByName(LinkedList_Courses* lCourses, const string& nameClass){
+    if(lCourses == NULL || lCourses->head == NULL) return NULL;
     NodeCourse* pNodeCourse = lCourses->head;
     while(pNodeCourse != NULL && (pNodeCourse->data.getClassName() != nameClass)){
         pNodeCourse = pNodeCourse->next;
     }
-    return pNodeCourse;
+    if(pNodeCourse == NULL) return NULL;
+    return &pNodeCourse->data;
 }
 
 NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses* lCourses, int index){
@@ -290,13 +306,14 @@ void Staff::deleteCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse) 
     delete temp;
 }
 
-NodeStudent* Staff::getNodeStudentPointerByID(LinkedList_Students* lStudents, const string& mssv){
+Student* Staff::getStudentByID(LinkedList_Students* lStudents, const string& mssv){
     if(lStudents == NULL || lStudents->head == NULL ) return NULL;
     NodeStudent* pNodeStudent = lStudents->head;
     while(pNodeStudent != NULL && (pNodeStudent->data.getStudentID() != mssv)){
         pNodeStudent = pNodeStudent->next;
     }
-    return pNodeStudent;
+    if(pNodeStudent == NULL) return NULL;
+    return &pNodeStudent->data;
 }
 
 NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, const Student& student){
@@ -443,13 +460,14 @@ NodeClass* Staff::getNodeClassPointer(LinkedList_Classes* lClasses, const Class&
     return pNodeClass;
 }
 
-NodeClass* Staff::getNodeClassPointerByName(LinkedList_Classes *lClasses, const string& nameClass){
+Class* Staff::getClassByName(LinkedList_Classes *lClasses, const string& nameClass){
     if(lClasses == NULL || lClasses->head == NULL) return NULL;
     NodeClass* pNodeClass = lClasses->head;
     while(pNodeClass != NULL && (pNodeClass->data.getNameClass() != nameClass)){
         pNodeClass = pNodeClass->next;
     }
-    return pNodeClass;
+    if(pNodeClass == NULL) return NULL;
+    return &pNodeClass->data;
 }
 
 NodeClass* Staff::getNodeClassPointer(LinkedList_Classes* lClasses, int index){
@@ -590,12 +608,14 @@ NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters* lSemesters, co
     return pNodeSemester;
 }
 
-NodeSemester* Staff::getNodeSemesterPointerByName(LinkedList_Semesters* lSemesters, const string& nameSemester){
+Semester* Staff::getSemesterByName(LinkedList_Semesters* lSemesters, const string& nameSemester){
+    if(lSemesters == NULL || lSemesters->head == NULL) return NULL;
     NodeSemester* pNodeSemester = lSemesters->head;
     while(pNodeSemester != NULL && (pNodeSemester->data.getNameSemester() != nameSemester)){
         pNodeSemester = pNodeSemester->next;
     }
-    return pNodeSemester;
+    if(pNodeSemester == NULL) return nullptr;
+    return &pNodeSemester->data;
 }
 
 NodeSemester* Staff::getNodeSemesterPointer(LinkedList_Semesters* lSemesters, int index){
@@ -650,6 +670,11 @@ void Staff::addTailSemester(LinkedList_Semesters* lSemesters, const Semester& se
     }
     lSemesters->tail->next = pNodeSemester;
     lSemesters->tail = pNodeSemester;
+}
+
+void Staff::addTailSemester(LinkedList_Semesters* lSemesters, const string& nameSemester){
+    Semester semester(nameSemester);
+    addTailSemester(lSemesters,semester);
 }
 
 void Staff::addBeforeSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterBefore, const Semester& semester){
@@ -735,13 +760,14 @@ NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolY
     return pNodeSchoolYear;
 }
 
-NodeSchoolYear* Staff::getNodeSchoolYearPointerByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear){
-    if(lSchoolYears == NULL) return NULL;
+SchoolYear* Staff::getSchoolYearByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear){
+    if(lSchoolYears == NULL||lSchoolYears->head == NULL) return NULL;
     NodeSchoolYear* pNodeSchoolYear = lSchoolYears->head;
     while(pNodeSchoolYear != NULL && (pNodeSchoolYear->data.getNameSchoolYear() != nameSchoolYear)){
         pNodeSchoolYear = pNodeSchoolYear->next;
     }
-    return pNodeSchoolYear;
+    if(pNodeSchoolYear == NULL) return NULL;
+    return &pNodeSchoolYear->data;
 }
 
 NodeSchoolYear* Staff::getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, int index){
@@ -796,6 +822,10 @@ void Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const School
     }
     lSchoolYears->tail->next = pNodeSchoolYear;
     lSchoolYears->tail = pNodeSchoolYear;
+}
+void Staff::addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolyear){
+    SchoolYear newSchoolyear(nameSchoolyear);
+    addTailSchoolYear(lSchoolYears,newSchoolyear);
 }
 
 void Staff::addBeforeSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, const SchoolYear& schoolyear){
@@ -870,19 +900,10 @@ void Staff::deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYea
 
 //
 LinkedList_Students* Staff::listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass){
-    NodeSchoolYear* nodeSchoolYear = getNodeSchoolYearPointerByName(getListSchoolYearsOfSchool(), nameYear);
-    if(nodeSchoolYear == NULL) return NULL;
-    SchoolYear schoolYear = nodeSchoolYear->data;
-    // delete nodeSchoolYear;
-    NodeSemester* nodeSemester = getNodeSemesterPointerByName(schoolYear.getListSemesters(),nameSemester);
-    if(nodeSemester == NULL) return NULL;
-    Semester semester = nodeSemester->data;
-    // delete nodeSemester;
-    NodeCourse* nodeCourse= getNodeCoursePointerByName(semester.getListCourses(),nameClass);
-    if(nodeCourse == NULL) return NULL;
-    Course course = nodeCourse->data;
-    // delete nodeCourse;
-    return course.getListStudents();
+    Semester* semester = findSemesterInYear(getListSchoolYearsOfSchool(),nameYear,nameSemester);
+    Course* course= getCourseByName(semester->getListCourses(),nameClass);
+    if(course == NULL) return NULL;
+    return course->getListStudents();
 }
 LinkedList_Classes* Staff::listClassesInYear(const string& nameYear){
     // duyệt qua danh sách class lớp của trường
@@ -899,39 +920,33 @@ LinkedList_Classes* Staff::listClassesInYear(const string& nameYear){
     }
     return listClassesInYear;
 }
-LinkedList_Students* Staff::findListStudentsOfAClassInYear(const string& nameYear, const string nameClass){
-    LinkedList_Classes* ClassesInYear = listClassesInYear(nameYear);
-    if(ClassesInYear == NULL) return NULL;
-    NodeClass* nodeClass = getNodeClassPointerByName(ClassesInYear,nameClass);
-    if(nodeClass == NULL) return NULL;
-    return nodeClass->data.getListStudents();
-}
-NodeStudent* Staff::findStudentByID(LinkedList_Classes* lClasses,const string& mssv){
+
+Student* Staff::findStudentByID(LinkedList_Classes* lClasses,const string& mssv){
     if(lClasses == NULL || lClasses->head == NULL) return NULL;
     NodeClass* tmp = lClasses->head;
     while(tmp != NULL){
-        NodeStudent* pStudent = getNodeStudentPointerByID(tmp->data.getListStudents(),mssv);
+        Student* pStudent = getStudentByID(tmp->data.getListStudents(),mssv);
         if(pStudent != NULL) return pStudent;
         tmp = tmp->next;
     }
     return NULL;
 }
-NodeSemester* Staff::findSemesterInYear(LinkedList_SchoolYears* lSchoolYears ,const string& nameYear, const string& nameSemester){
-    NodeSchoolYear* pYear = getNodeSchoolYearPointerByName(lSchoolYears,nameYear);
-    if(pYear == 0) return NULL;
-    return getNodeSemesterPointerByName(pYear->data.getListSemesters(),nameSemester);
+Semester* Staff::findSemesterInYear(LinkedList_SchoolYears* lSchoolYears ,const string& nameYear, const string& nameSemester){
+    SchoolYear* pYear = getSchoolYearByName(lSchoolYears,nameYear);
+    if(pYear == NULL) return NULL;
+    return getSemesterByName(pYear->getListSemesters(),nameSemester);
 }
 
 LinkedList_Courses* Staff::listCourseOfStudent(const string& mssv, const string& nameYear, const string& nameSemester){
-    NodeStudent* pStudent = findStudentByID(getListClassesOfSchool(),mssv);
+    Student* pStudent = findStudentByID(getListClassesOfSchool(),mssv);
     if(pStudent == NULL) return NULL;
-    NodeSemester* pSemester = findSemesterInYear(pStudent->data.getListSchoolYearsOfSchool(),nameYear,nameSemester);
+    Semester* pSemester = findSemesterInYear(pStudent->getListSchoolYearsOfSchool(),nameYear,nameSemester);
     if(pSemester == NULL) return NULL;
-    return pSemester->data.getListCourses();
+    return pSemester->getListCourses();
 }
 
 LinkedList_Courses* Staff::listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester){
-    NodeSemester* pSemester = findSemesterInYear(lSchoolYears,nameYear,nameSemester);
+    Semester* pSemester = findSemesterInYear(lSchoolYears,nameYear,nameSemester);
     if(pSemester == NULL) return NULL;
-    return pSemester->data.getListCourses();
+    return pSemester->getListCourses();
 }

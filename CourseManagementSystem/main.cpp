@@ -7,11 +7,13 @@
 #include "class.h"
 
 int main() {
-    Class s;
-    Staff a;
-    a.loadStudentsInClass(&s,"D:/16CTT3.csv");
-    a.addTailClass(a.getListClassesOfSchool(),s);
-    NodeStudent* sdd = a.findStudentByID(a.getListClassesOfSchool(),"20120278");
-    cout << sdd->data.getEnrolledClass();
+    Staff admin;
+    Class a("16CTT3.csv");
+    admin.addTailClass(admin.getListClassesOfSchool(),a);
+    cout << &a << endl;
+    Class* b =  &admin.getListClassesOfSchool()->head->data;
+    admin.loadStudentsInClass(b,"D:/16CTT3.csv");
+    cout << admin.getListClassesOfSchool()->head->data.getListStudents()->head->data.getLastName();
+    // delete admin;
     return 0;
 }

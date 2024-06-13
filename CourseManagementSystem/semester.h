@@ -13,6 +13,7 @@ private:
 public:
     Semester();
     Semester(Date startDate, Date endDate,string name);
+    Semester(const string& name);
     bool operator!=(const Semester& other) const;
     Date getStartDate() const;
     Date getEndDate() const;

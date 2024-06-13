@@ -22,7 +22,7 @@ struct NodeClass;
 struct NodeCourse;
 
 class Staff : public User {
-private:
+public:
      static LinkedList_Classes*  listClassesOfSchool;
      static LinkedList_SchoolYears* listSchoolYearsOfSchool;
 public:
@@ -32,21 +32,19 @@ public:
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
 
     // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
-    // Tìm 1 kì học trong danh sách lớp
-    NodeSemester* findSemesterInYear( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
+    // Tìm 1 kì học trong danh sách năm
+    Semester* findSemesterInYear( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
 
     // trả về danh sách sinh viên của 1 môn học bằng mã lớp
     // ex : 23_s2 23_s1 cùng thuộc mã MATH001 môn VI TÍCH PHÂN
     LinkedList_Students* listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass);
 
     // trả về danh sách các lớp của 1 năm học (k23,k24,..)
+    // sử dụng xong nhớ xóa đi
     LinkedList_Classes* listClassesInYear(const string& nameYear);
 
-    // trả về danh sách sinh viên của lớp đó
-    LinkedList_Students* findListStudentsOfAClassInYear(const string& nameYear, const string nameClass);
-
     //Tìm 1 học sinh trong danh sách các lớp
-    NodeStudent* findStudentByID(LinkedList_Classes* lClasses, const string& mssv);
+    Student* findStudentByID(LinkedList_Classes* lClasses, const string& mssv);
 
     // Tìm Danh Sách khóa học của 1 học sinh trong 1 kì
     LinkedList_Courses* listCourseOfStudent(const string& mssv, const string& nameYear, const string& nameSemester);
@@ -59,6 +57,18 @@ public:
 
     // hàm load sinh viên cho 1 lớp học
     void loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester);
+
+    //trả về một khó học theo tên lớp khóa học
+    Course* getCourseByName(LinkedList_Courses* lCourses, const string& nameClass);
+
+    // Tìm danh sách sinh viên trong 1 lớp học
+    Student* getStudentByID(LinkedList_Students* lStudents, const string& mssv);
+
+    //Tìm kì học trong danh sách kì
+    Semester* getSemesterByName(LinkedList_Semesters* lSemesters, const string& nameSemester);
+
+    //Tìm năm học trong danh sách năm
+    SchoolYear* getSchoolYearByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear);
 
     // các hàm thay đổi thông tin khóa học, lớp, ...
     void change_idCourse(Course& course,string newIdCourse);
@@ -75,7 +85,6 @@ public:
     string** processCsvFile(const string& fileDirection, int& numRows);
     void deletePointerData(string** s, int numRows);
     // hàm Course
-    NodeCourse* getNodeCoursePointerByName(LinkedList_Courses* lCourses, const string& nameClass);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, int index);
     int getNodeCourseIndex(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
@@ -87,7 +96,6 @@ public:
     void addCourseAtIndex(LinkedList_Courses* lCourses, const Course& course, int index);
     void deleteCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
     // hàm cho Student
-    NodeStudent* getNodeStudentPointerByID(LinkedList_Students* lStudents, const string& mssv);
     NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, const Student& student);
     NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, int index);
     int getNodeStudentIndex(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
@@ -99,7 +107,7 @@ public:
     void addStudentAtIndex(LinkedList_Students* lStudents, const Student& student, int index);
     void deleteStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
     // hàm cho Class
-    NodeClass* getNodeClassPointerByName(LinkedList_Classes *lClasses, const string& nameClass); // ex : 23CTT5
+    Class* getClassByName(LinkedList_Classes *lClasses, const string& nameClass); // ex : 23CTT5
     NodeClass* getNodeClassPointer(LinkedList_Classes* lClasses, const Class& Class);
     NodeClass* getNodeClassPointer(LinkedList_Classes* lClasses, int index);
     int getNodeClassIndex(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
@@ -111,25 +119,25 @@ public:
     void addClassAtIndex(LinkedList_Classes* lClasses, const Class& Class, int index);
     void deleteClass(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
     // hàm cho Semester
-    NodeSemester* getNodeSemesterPointerByName(LinkedList_Semesters* lSemesters, const string& nameSemester);
     NodeSemester* getNodeSemesterPointer(LinkedList_Semesters* lSemesters, const Semester& semester);
     NodeSemester* getNodeSemesterPointer(LinkedList_Semesters* lSemesters, int index);
     int getNodeSemesterIndex(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
     NodeSemester* getPreviousNodeSemesterPointer(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
     void addHeadSemester(LinkedList_Semesters* lSemesters, const Semester& semester);
     void addTailSemester(LinkedList_Semesters* lSemesters, const Semester& semester);
+    void addTailSemester(LinkedList_Semesters* lSemesters, const string& nameSemester);
     void addBeforeSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterBefore, const Semester& semester);
     void addAfterSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemesterAfter, const Semester& semester);
     void addSemesterAtIndex(LinkedList_Semesters* lSemesters, const Semester& semester, int index);
     void deleteSemester(LinkedList_Semesters* lSemesters, NodeSemester* pNodeSemester);
     // hàm cho SchoolYear
-    NodeSchoolYear* getNodeSchoolYearPointerByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear);
     NodeSchoolYear* getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
     NodeSchoolYear* getNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, int index);
     int getNodeSchoolYearIndex(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
     NodeSchoolYear* getPreviousNodeSchoolYearPointer(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
     void addHeadSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
     void addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear);
+    void addTailSchoolYear(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolyear);
     void addBeforeSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearBefore, const SchoolYear& schoolyear);
     void addAfterSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, const SchoolYear& schoolyear);
     void addSchoolYearAtIndex(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear, int index);

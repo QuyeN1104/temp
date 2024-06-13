@@ -3,6 +3,7 @@
 
     // Constructor mặc định của Semester
 Semester::Semester() : startDate({0, 0, 0}), endDate({0, 0, 0}), nameSemester("") {}
+Semester::Semester(const string& name) : startDate({0, 0, 0}), endDate({0, 0, 0}), nameSemester(name) {}
 
     // Constructor của Semester với tham số
 Semester::Semester(Date start, Date end,string name) : startDate(start), endDate(end), nameSemester(name) {}
