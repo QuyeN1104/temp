@@ -23,12 +23,10 @@ struct NodeCourse;
 
 class Staff : public User {
 private:
-     static LinkedList_Classes*  listClassesOfSchool;
      static LinkedList_SchoolYears* listSchoolYearsOfSchool;
 public:
     // các hàm getter
     Staff();
-    LinkedList_Classes* getListClassesOfSchool() const;
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
 
     // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
@@ -39,15 +37,20 @@ public:
     // ex : 23_s2 23_s1 cùng thuộc mã MATH001 môn VI TÍCH PHÂN
     LinkedList_Students* listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass);
 
+    // trả về năm nhập học của 1 học sinh theo mssv
+    // ví dụ 23120349 -> k23 -> 2023-2024
+    SchoolYear* findEnrolledYearOfAStudent(const string& mssv);
+
     // trả về danh sách các lớp của 1 năm học (k23,k24,..)
-    // sử dụng xong nhớ xóa đi
     LinkedList_Classes* listClassesInYear(const string& nameYear);
 
     //Tìm 1 học sinh trong danh sách các lớp
-    Student* findStudentByID(LinkedList_Classes* lClasses, const string& mssv);
+    Student* findStudentByID(const string& mssv);
 
     // Tìm Danh Sách khóa học của 1 học sinh trong 1 kì
     LinkedList_Courses* listCourseOfStudent(const string& mssv, const string& nameYear, const string& nameSemester);
+
+    // Hàm trả về danh sách lớp của năm học
 
     // Trả về danh sách các môn học của 1 học kì
     LinkedList_Courses* listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
@@ -56,7 +59,7 @@ public:
     void loadStudentsInClass(Class* Class,const string& fileDirection);
 
     // hàm load sinh viên cho 1 lớp học
-    void loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester);
+    bool loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester);
 
     //trả về một khó học theo tên lớp khóa học
     Course* getCourseByName(LinkedList_Courses* lCourses, const string& nameClass);
@@ -114,6 +117,7 @@ public:
     NodeClass* getPreviousNodeClassPointer(LinkedList_Classes* lClasses, NodeClass* pNodeClass);
     void addHeadClass(LinkedList_Classes* lClasses, const Class& Class);
     Class* addTailClass(LinkedList_Classes* lClasses, const Class& Class);
+    Class* addTailClass(LinkedList_Classes* lClasses, const string& nameClass);
     void addBeforeClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassBefore, const Class& Class);
     void addAfterClass(LinkedList_Classes* lClasses, NodeClass* pNodeClassAfter, const Class& Class);
     void addClassAtIndex(LinkedList_Classes* lClasses, const Class& Class, int index);

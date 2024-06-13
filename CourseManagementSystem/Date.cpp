@@ -37,4 +37,8 @@ string splitNameClassFromFile(const string& fileDirection){
         return fileDirection.substr(0, dotPosition);
     }
 }
+string fullNameSchoolYear(string shortNameYear){
+    string fullName = "20" + shortNameYear.substr(0,2) + "-20" + to_string(stoi(shortNameYear.substr(0,2))+1);
+    return fullName;
+}
 

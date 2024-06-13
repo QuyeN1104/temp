@@ -20,3 +20,4 @@ string normalizeDateOfBirth(string s);
 Date stringToDate(const string& sDate);
 string dateToString(const Date& date);
 string splitNameClassFromFile(const string& fileDirection);
+string fullNameSchoolYear(string shortNameYear); // trả về năm học đầy đủ từ năm học theo hai số đầu // ex 23->2023-2024

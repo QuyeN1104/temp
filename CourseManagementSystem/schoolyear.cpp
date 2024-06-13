@@ -1,14 +1,19 @@
 #include "schoolyear.h"
 #include "semester.h"
+#include"class.h"
 
 // Constructor mặc định của SchoolYear
-SchoolYear::SchoolYear() : name("") , listSemestersOfYear(new LinkedList_Semesters()) {}
+SchoolYear::SchoolYear() : name("") , listSemestersOfYear(new LinkedList_Semesters()),listClassesOfYear(new LinkedList_Classes()) {}
 
 // Constructor của SchoolYear với tên
-SchoolYear::SchoolYear(const string& name) : name(name), listSemestersOfYear(new LinkedList_Semesters()) {}
+SchoolYear::SchoolYear(const string& name) : name(name), listSemestersOfYear(new LinkedList_Semesters()),listClassesOfYear(new LinkedList_Classes()) {}
 
 bool SchoolYear::operator !=(const SchoolYear& other) const{
     return this->name != other.name;
+}
+
+LinkedList_Classes* SchoolYear::getListClassesOfYear() const {
+    return listClassesOfYear;
 }
 // Constructor của NodeSchoolYear
 NodeSchoolYear::NodeSchoolYear() : data(SchoolYear()) , next(nullptr) {}

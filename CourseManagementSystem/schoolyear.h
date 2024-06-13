@@ -3,12 +3,15 @@
 #include"library.h"
 
 struct LinkedList_Semesters;
+struct LinkedList_Classes;
 class SchoolYear {
     friend class Staff;
 private:
     string name;
+    LinkedList_Classes*  listClassesOfYear;
     LinkedList_Semesters* listSemestersOfYear;
 public:
+    LinkedList_Classes* getListClassesOfYear() const;
     bool operator !=(const SchoolYear& other) const;
     SchoolYear();
     SchoolYear(const string& name);
