@@ -951,3 +951,9 @@ SchoolYear* Staff::findEnrolledYearOfAStudent(const string& mssv){
     string year = fullNameSchoolYear(mssv);
     return getSchoolYearByName(getListSchoolYearsOfSchool(),year);
 }
+Student* Staff::IsStudent(const string& userName,const string& passWord){
+    Student* student = findStudentByID(userName); // userName is mssv
+    if(student == NULL) return NULL;
+    if(student->getPassWord() == passWord) return student;
+    return NULL;
+}

@@ -30,6 +30,9 @@ public:
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;
 
     // các hàm truy xuất trực tiếp cần sử dụng ( cho UI )
+
+    // hàm kiểm tra sinh viên khi đăng nhập
+    Student* IsStudent(const string& userName,const string& passWord);
     // Tìm 1 kì học trong danh sách năm
     Semester* findSemesterInYear( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
 
