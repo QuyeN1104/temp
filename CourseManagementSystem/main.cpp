@@ -39,5 +39,6 @@ int main() {
         i++;
     }
     cout << "hello";
+    cout << sizeof(admin);
     return 0;
 }
