@@ -104,7 +104,7 @@ void Staff::deletePointerData(string** s, int numRows){
     delete [] s;
 }
 // fileDirection ex : 23CTT5.csv
-bool Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
+bool Staff::loadStudentsInClass(LinkedList_Students* lStudents ,const string& fileDirection){
     bool loaded = false;
     int numRows;
     string** data = processCsvFile(fileDirection,numRows);
@@ -113,14 +113,18 @@ bool Staff::loadStudentsInClass(Class* Class,const string& fileDirection){
     for(int i = 0; i < numRows; i++){
         // gán từng data[i] vào các NodeStudent
         Student student(data[i],nameClass);
-        addTailStudent(Class->getListStudents(),student);
+        addTailStudent(lStudents,student);
         loaded = true;
     }
     deletePointerData(data,numRows);
     return loaded;
 }
 
-bool Staff::loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester){
+bool Staff::loadStudentsInCourse(LinkedList_Students* lStudents, const string& fileDirection){
+    string nameYear = "", nameSemester = "";
+    string nameClass = splitYearandSemesterfromFile(fileDirection,nameYear,nameSemester);
+    Course* course = findCourseByClassName(nameYear,nameSemester,nameClass);
+    if(course == NULL) return false;
     int numRows;
     bool loaded = false;
     string** data = processCsvFile(fileDirection,numRows);
@@ -129,7 +133,7 @@ bool Staff::loadStudentsInCourse(Course* course, const string& fileDirection,con
         Student* student = findStudentByID(data[i][0]); // mssv được lưu trường đầu tiên trong data
         if(student == NULL) continue; // không có học sinh này trong trường
         // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
-        student = addTailStudent(course->getListStudents(),*student);
+        student = addTailStudent(lStudents,*student);
         // thêm khóa học đó vào danh sách của học sinh
         // kiểm tra năm học đó có tồn tại không
         SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
@@ -928,6 +932,14 @@ Student* Staff::findStudentByID(const string& mssv){
     }
     return NULL;
 }
+
+Course* Staff::findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass){
+    LinkedList_Courses* lCourses = listCourseOfSemester(getListSchoolYearsOfSchool(),nameYear,nameSemester);
+    if(lCourses == nullptr) return NULL;
+    Course* course = getCourseByName(lCourses,nameClass);
+    return course;
+}
+
 Semester* Staff::findSemesterInYear(LinkedList_SchoolYears* lSchoolYears ,const string& nameYear, const string& nameSemester){
     SchoolYear* pYear = getSchoolYearByName(lSchoolYears,nameYear);
     if(pYear == NULL) return NULL;

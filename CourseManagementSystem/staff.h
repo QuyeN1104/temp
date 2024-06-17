@@ -50,6 +50,9 @@ public:
     //Tìm 1 học sinh trong danh sách các lớp
     Student* findStudentByID(const string& mssv);
 
+    //Tìm một khóa học dựa theo năm kì và mã lớp
+    Course* findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass);
+
     // Tìm Danh Sách khóa học của 1 học sinh trong 1 kì
     LinkedList_Courses* listCourseOfStudent(const string& mssv, const string& nameYear, const string& nameSemester);
 
@@ -59,10 +62,10 @@ public:
     LinkedList_Courses* listCourseOfSemester( LinkedList_SchoolYears* lSchoolYears ,const string& nameYear,const string& nameSemester);
 
     // hàm load sinh viên vào một class
-    bool loadStudentsInClass(Class* Class,const string& fileDirection);
+    bool loadStudentsInClass(LinkedList_Students* lStudents ,const string& fileDirection);
 
     // hàm load sinh viên cho 1 lớp học
-    bool loadStudentsInCourse(Course* course, const string& fileDirection,const string& nameYear, const string& nameSemester);
+    bool loadStudentsInCourse(LinkedList_Students* lStudents, const string& fileDirection);
 
     //trả về một khó học theo tên lớp khóa học
     Course* getCourseByName(LinkedList_Courses* lCourses, const string& nameClass);

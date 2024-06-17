@@ -33,12 +33,22 @@ string dateToString(const Date& date){
 }
 string splitNameClassFromFile(const string& fileDirection){
     size_t dotPosition = fileDirection.find('.');
+    size_t pos = fileDirection.rfind('/') + 1;
+    if(pos == string::npos){
+        pos = 0;
+    }
     if (dotPosition != std::string::npos) {
-        return fileDirection.substr(0, dotPosition);
+        return fileDirection.substr(pos, dotPosition - pos);
     }
 }
 string fullNameSchoolYear(string shortNameYear){
     string fullName = "20" + shortNameYear.substr(0,2) + "-20" + to_string(stoi(shortNameYear.substr(0,2))+1);
     return fullName;
+}
+string splitYearandSemesterfromFile(const string& fileDirection, string& nameYear,string& nameSemester){
+    string nameClass  = splitNameClassFromFile(fileDirection); // lấy mã lớp ra
+    nameYear = fullNameSchoolYear(nameClass.substr(0,2));
+    nameSemester = nameClass.substr(2,1);
+    return nameClass;
 }
 

@@ -21,3 +21,4 @@ Date stringToDate(const string& sDate);
 string dateToString(const Date& date);
 string splitNameClassFromFile(const string& fileDirection);
 string fullNameSchoolYear(string shortNameYear); // trả về năm học đầy đủ từ năm học theo hai số đầu // ex 23->2023-2024
+string splitYearandSemesterfromFile(const string& fileDirection, string& nameYear,string& nameSemester); // hàm trả về năm và kì từ mã lớp của một khóa học
