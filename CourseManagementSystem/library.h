@@ -7,7 +7,7 @@
 #include<sstream>
 #include<bits/stdc++.h>
 using namespace std;
-#define numCsvCols 6
+#define numCsvCols 7
 #define defaultUserName  "_admin_hcmus";
 #define defaultPassWord  "admin@_-";
 #define defaultPassWordStudent "helloworld"
