@@ -909,6 +909,7 @@ void Staff::deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYea
 //
 LinkedList_Students* Staff::listStudentsOfCourse(const string& nameYear, const string& nameSemester, const string& nameClass){
     Semester* semester = findSemesterInYear(getListSchoolYearsOfSchool(),nameYear,nameSemester);
+    if(semester == NULL) return NULL;
     Course* course= getCourseByName(semester->getListCourses(),nameClass);
     if(course == NULL) return NULL;
     return course->getListStudents();
