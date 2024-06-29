@@ -21,27 +21,56 @@ LinkedList_SchoolYears* Staff::getListSchoolYearsOfSchool() const {
 }
 
 //
+
+void Staff::setCourse(Course* course,string id, string name, string className, string teacherName, int numCredits,
+                string dayofWeek, string session){
+    if(course){
+        Course* newCourse = new Course(id,name,className,teacherName,numCredits,dayofWeek,session);
+        string nameClass = course->getClassName();
+        string nameYear, nameSemester;
+        splitYearandSemester(nameClass,nameYear,nameSemester);
+        NodeStudent* tmp = course->getListStudents()->head;
+        while(tmp){
+            Student* st = &(tmp->data);
+            Course* pCourse = st->findCourseByClassName(nameYear,nameSemester,nameClass);
+            if(pCourse){
+                *pCourse = *newCourse;
+            }
+            tmp = tmp->next;
+        }
+        *course = *newCourse;
+        delete newCourse;
+    }
+}
+
 void Staff::change_idCourse(Course* course, string newIdCourse) {
     if (course) {
         course->idCourse = newIdCourse;
-        // string nameClass = course->getClassName();
-        // string nameYear,nameSemester;
-        // NodeStudent* tmp = course->getListStudents()->head;
-        // while(tmp){
-        //     splitYearandSemester(nameClass,nameYear,nameSemester);
-        //      Course* pCourse = findCourseByClassName()
-        // }
+        updateCourseforStudent(course);
     }
 }
 
 void Staff::change_nameCourse(Course* course, string newNameCourse) {
     if (course) {
         course->nameCourse = newNameCourse;
+        updateCourseforStudent(course);
     }
 }
 
 void Staff::change_className(Course* course, string newClassName) {
     if (course) {
+        string nameClass = course->getClassName();
+        string nameYear, nameSemester;
+        splitYearandSemester(nameClass,nameYear,nameSemester);
+        NodeStudent* tmp = course->getListStudents()->head;
+        while(tmp){
+            Student* st = &(tmp->data);
+            Course* pCourse = st->findCourseByClassName(nameYear,nameSemester,nameClass);
+            if(pCourse){
+                pCourse->className = newClassName;
+            }
+            tmp = tmp->next;
+        }
         course->className = newClassName;
     }
 }
@@ -49,30 +78,50 @@ void Staff::change_className(Course* course, string newClassName) {
 void Staff::change_teacherName(Course* course, string newTeacherName) {
     if (course) {
         course->teacherName = newTeacherName;
+        updateCourseforStudent(course);
     }
 }
 
 void Staff::change_numCredits(Course* course, int newNumCredits) {
     if (course) {
         course->numCredits = newNumCredits;
+        updateCourseforStudent(course);
     }
 }
 
 void Staff::change_session(Course* course, string newSession) {
     if (course) {
         course->session = newSession;
+        updateCourseforStudent(course);
     }
 }
 
 void Staff::change_dayofWeek(Course* course, string newDayofWeek) {
     if (course) {
         course->dayofWeek = newDayofWeek;
+        updateCourseforStudent(course);
     }
 }
 
 void Staff::change_maxStudents(Course* course, int newMaxStudents) {
     if (course) {
         course->maxStudents = newMaxStudents;
+        updateCourseforStudent(course);
+    }
+}
+void Staff::updateCourseforStudent(Course* course){
+    if(!course) return;
+    string nameClass = course->getClassName();
+    string nameYear, nameSemester;
+    splitYearandSemester(nameClass,nameYear,nameSemester);
+    NodeStudent* tmp = course->getListStudents()->head;
+    while(tmp){
+        Student* st = &(tmp->data);
+        Course* pCourse = st->findCourseByClassName(nameYear,nameSemester,nameClass);
+        if(pCourse){
+            *pCourse = *course;
+        }
+        tmp = tmp->next;
     }
 }
 
@@ -135,7 +184,9 @@ void Staff::deletePointerData(string** s, int numRows){
 }
 
 bool Staff::exportCourseCsvFile(Course* course,const string& fileDirect){
-    string filePath = fileDirect + "/" + course->getClassName() + "_scores.csv";
+    string filePath;
+    if(fileDirect.find(".csv") != string::npos) filePath = fileDirect;
+    else filePath = fileDirect + "/" + course->getClassName() + "_scores.csv"; // đã tạo file
     ofstream f;
     f.open(filePath);
     if(!f.is_open()){

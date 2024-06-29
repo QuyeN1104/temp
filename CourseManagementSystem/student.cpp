@@ -100,13 +100,53 @@ Semester* Student::findSemesterInYear(const string& nameYear, const string& name
     return getSemesterByName(pYear->getListSemesters(),nameSemester);
 }
 
-// Course* Student::findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass){
-//     Semester* pSemester = findSemesterInYear(getListSchoolYearsOfSchool(),nameYear,nameSemester);
-//     if(!pSemester) return NULL;
+Course* Student::getCourseByName(LinkedList_Courses* lCourses, const string& nameClass){
+    if(lCourses == NULL || lCourses->head == NULL) return NULL;
+    NodeCourse* pNodeCourse = lCourses->head;
+    while(pNodeCourse != NULL && (pNodeCourse->data.getClassName() != nameClass)){
+        pNodeCourse = pNodeCourse->next;
+    }
+    if(pNodeCourse == NULL) return NULL;
+    return &pNodeCourse->data;
+}
 
-//     Course* course = getCourseByName(lCourses,nameClass);
-//     return course;
-// }
+double Student::getGPAOfSemester (double& allGpa,double &allCredits,Semester* semester){
+    if(semester == NULL) return -1;
+    if(semester->getListMarks() == NULL) return -2;
+    NodeMark* tmp = semester->getListMarks()->head;
+     allGpa = 0, allCredits = 0;
+    while(tmp){
+        allGpa+=tmp->data.totalMark;
+        allCredits+=tmp->data.course->getNumCredits();
+        tmp = tmp->next;
+    }
+    double all = allGpa/allCredits;
+    return all;
+}
+double Student::getAllGPA(){
+    double allscore = 0, allCredits = 0;
+    NodeSchoolYear* year = getListSchoolYearsOfSchool()->head;
+    while(year){
+        NodeSemester* semester = year->data.getListSemesters()->head;
+        while(semester){
+           double curgpa, curCredits;
+            getGPAOfSemester(curgpa,curCredits,&semester->data);
+           allscore+=curgpa;
+            allCredits+=curCredits;
+           semester = semester->next;
+        }
+        year = year->next;
+    }
+    return allscore/allCredits;
+}
+
+Course* Student::findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass){
+    Semester* pSemester = findSemesterInYear(nameYear,nameSemester);
+    if(!pSemester) return NULL;
+
+    Course* course = getCourseByName(pSemester->getListCourses(),nameClass);
+    return course;
+}
 
 string Student::getStudentID() const{
     return studentID;

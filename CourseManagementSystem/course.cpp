@@ -11,6 +11,7 @@ bool Course::operator!=(const Course& other) const {
     return this->idCourse != other.idCourse || this->nameCourse != other.nameCourse || this->className != other.className ||
            this->teacherName != other.teacherName || this->numCredits != other.numCredits || this->dayofWeek != other.dayofWeek || this->session != other.session;
 }
+
 // Getter functions for Course
 string Course::getIdCourse() const {
     return idCourse;

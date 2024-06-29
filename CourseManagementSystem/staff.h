@@ -88,6 +88,8 @@ public:
 
     //
     // các hàm thay đổi thông tin khóa học, lớp, ...
+    void setCourse(Course* course,string id, string name, string className, string teacherName, int numCredits,
+        string dayofWeek, string session);
     void change_idCourse(Course* course, string newIdCourse);
     void change_nameCourse(Course* course, string newNameCourse);
     void change_className(Course* course, string newClassName);
@@ -96,6 +98,7 @@ public:
     void change_session(Course* course, string newSession);
     void change_dayofWeek(Course* course, string newDayofWeek);
     void change_maxStudents(Course* course, int newMaxStudents);
+    void updateCourseforStudent(Course* course);
 
     // các hàm làm việc vơí file
     int countLines(const string& filename);

@@ -35,7 +35,10 @@ public:
     SchoolYear* getSchoolYearByName(const string& nameSchoolYear);
     Semester* getSemesterByName(LinkedList_Semesters* lSemesters, const string& nameSemester);
     Semester* findSemesterInYear(const string& nameYear, const string& nameSemester);
-    // Course* findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass);
+    Course* findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass);
+    Course* getCourseByName(LinkedList_Courses* lCourses, const string& nameClass);
+    double getGPAOfSemester (double& allGpa,double &allCredits,Semester* semester);
+    double getAllGPA();
 };
 struct NodeStudent{
     Student data;
