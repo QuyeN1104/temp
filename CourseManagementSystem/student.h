@@ -16,9 +16,9 @@ private:
     string studentID;
     string enrolledClass;
     LinkedList_SchoolYears* dataOfStudents;
+    Mark* markOfCourse;
     // dành cho học sinh trong khóa học
 public:
-    Mark* markOfCourse;
     // hàm lấy 1 danh sách môn học của 1 kì thuộc 1 năm học
     LinkedList_Courses* getListCoursesOfASemester(const string& nameYear, const string& nameSemester);
     Student();

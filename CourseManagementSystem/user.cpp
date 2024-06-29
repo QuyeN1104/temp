@@ -58,10 +58,12 @@ User::User(string firstName, string lastName,string userName, string passWord, D
 string gender, string socialID): firstName(firstName), lastName(lastName), userName(userName),
     passWord(passWord), dateOfBirth(dateofBirth), gender(gender), socialID(socialID) {}
 
-bool User::changePassWord(string oldPass, string newPass, string confirmNewPass) {
-    if (oldPass == this->passWord && newPass == confirmNewPass) {
+int User::changePassWord(string oldPass, string newPass, string confirmNewPass) {
+    if(oldPass != passWord) return 0;
+    if(newPass != confirmNewPass) return 1;
+    else {
         this->passWord = newPass;
-        return true;
+        return 2;
     }
     return false;
 }

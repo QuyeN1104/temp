@@ -11,7 +11,7 @@ protected:
 public:
     User();
     User(string firstName, string lastName, string userName, string passWord, Date dateofBirth, string gender, string socialID);
-    bool changePassWord(string oldPass, string newPass, string confirmNewPass);
+    int changePassWord(string oldPass, string newPass, string confirmNewPass);
     string getFirstName() const;
     string getLastName() const;
     string getUserName() const;

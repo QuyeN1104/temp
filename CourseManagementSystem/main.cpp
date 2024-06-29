@@ -20,6 +20,12 @@ int main() {
     Course myCourse("CS101", "Introduction to Computer Science", "211vtp2b", "Dr. Smith", 3, "Monday", "Morning");
     Course* course = admin.addTailCourse(semester->getListCourses(),myCourse);
     cout << admin.loadStudentsInCourse(course->getListStudents(),"D:/211vtp2b.csv") << endl;
-    admin.deleteCourse(semester->getListCourses(),course);
+    cout << admin.importCourseCsvFile(course,"D:/211vtp2b_scores.csv");
+    NodeStudent* mark = course->getListStudents()->head;
+    while(mark){
+        cout << mark->data.getMarks()->otherMark << endl;
+        mark = mark->next;
+    }
+    cout << "----------------------------------------------\n";
     return 0;
 }
