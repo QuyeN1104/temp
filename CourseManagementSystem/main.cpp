@@ -20,7 +20,12 @@ int main() {
     Course myCourse("CS101", "Introduction to Computer Science", "211vtp2b", "Dr. Smith", 3, "Monday", "Morning");
     Course* course = admin.addTailCourse(semester->getListCourses(),myCourse);
     cout << admin.loadStudentsInCourse(course->getListStudents(),"D:/211vtp2b.csv") << endl;
+    admin.importCourseCsvFile(course,"D:/211vtp2b_scores.csv");
     Student* id = admin.findStudentByID("21000352");
-    admin.change_className(course,"21KTLT_1");
+    Semester* pSemester = admin.findSemesterInYear(id->getListSchoolYearsOfSchool(),"2021-2022","1");
+    if(pSemester){
+        cout << pSemester->getListMarks()->head->data.totalMark << endl;
+    }
+
     return 0;
 }

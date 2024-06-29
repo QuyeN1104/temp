@@ -100,6 +100,14 @@ Semester* Student::findSemesterInYear(const string& nameYear, const string& name
     return getSemesterByName(pYear->getListSemesters(),nameSemester);
 }
 
+// Course* Student::findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass){
+//     Semester* pSemester = findSemesterInYear(getListSchoolYearsOfSchool(),nameYear,nameSemester);
+//     if(!pSemester) return NULL;
+
+//     Course* course = getCourseByName(lCourses,nameClass);
+//     return course;
+// }
+
 string Student::getStudentID() const{
     return studentID;
 }

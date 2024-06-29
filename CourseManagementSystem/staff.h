@@ -101,7 +101,7 @@ public:
     int countLines(const string& filename);
     string** processCsvFile(const string& fileDirection, int& numRows);
     void deletePointerData(string** s, int numRows);
-     bool exportCourseCsvFile(Course* course,const string& fileDirect);
+    bool exportCourseCsvFile(Course* course,const string& filePath);
     bool importCourseCsvFile(Course* course, const string& fileName);
     // hàm Course
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course);

@@ -7,6 +7,7 @@ struct Mark{
     double totalMark, finalMark, midtermMark, otherMark;
     Mark();
     Mark(double other, double mid, double final, double total);
+    Mark(Course* newCoure,double other, double mid, double final, double total);
 };
 struct NodeMark{
     Mark data;

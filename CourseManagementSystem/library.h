@@ -23,3 +23,4 @@ string fullNameSchoolYear(string shortNameYear); // trả về năm học đầy
 void splitYearandSemester(const string& nameClass, string& nameYear,string& nameSemester);
 string splitYearandSemesterfromFile(const string& fileDirection, string& nameYear,string& nameSemester); // hàm trả về năm và kì từ mã lớp của một khóa học
 
+

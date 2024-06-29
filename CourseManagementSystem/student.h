@@ -35,6 +35,7 @@ public:
     SchoolYear* getSchoolYearByName(const string& nameSchoolYear);
     Semester* getSemesterByName(LinkedList_Semesters* lSemesters, const string& nameSemester);
     Semester* findSemesterInYear(const string& nameYear, const string& nameSemester);
+    // Course* findCourseByClassName(const string& nameYear,const string& nameSemester,const string& nameClass);
 };
 struct NodeStudent{
     Student data;

@@ -24,6 +24,13 @@ LinkedList_SchoolYears* Staff::getListSchoolYearsOfSchool() const {
 void Staff::change_idCourse(Course* course, string newIdCourse) {
     if (course) {
         course->idCourse = newIdCourse;
+        // string nameClass = course->getClassName();
+        // string nameYear,nameSemester;
+        // NodeStudent* tmp = course->getListStudents()->head;
+        // while(tmp){
+        //     splitYearandSemester(nameClass,nameYear,nameSemester);
+        //      Course* pCourse = findCourseByClassName()
+        // }
     }
 }
 
@@ -159,8 +166,8 @@ bool Staff::importCourseCsvFile(Course* course, const string& fileName) {
     if (course == NULL) return false;
 
     string nameClass = course->getClassName();
-    string nameYear = fullNameSchoolYear(nameClass.substr(0, 2));
-    string nameSemester = nameClass.substr(2, 1);
+    string nameYear, nameSemester;
+    splitYearandSemester(nameClass,nameYear,nameSemester);
     int numRows;
     string** data = processCsvFile(fileName, numRows);
 
@@ -174,13 +181,30 @@ bool Staff::importCourseCsvFile(Course* course, const string& fileName) {
         double mid = stod(data[i][3]);
         double final = stod(data[i][4]);
         double total = stod(data[i][5]);
-        Mark* mark = new Mark(other, mid, final, total);
+        Mark* mark = new Mark(course,other, mid, final, total);
 
         // Xóa đối tượng Mark cũ nếu có để tránh rò rỉ bộ nhớ
         delete tmp->data.markOfCourse;
         tmp->data.markOfCourse = mark;
         tmp = tmp->next;
     }
+     tmp = course->getListStudents()->head;
+    for (int i = 0; i < numRows; i++) {
+        if (!tmp) break;  // Kiểm tra nếu danh sách rỗng hoặc đã hết sinh viên
+        Student* pStudent = findStudentByID(data[i][0]);
+        if(!pStudent) continue;
+        Semester* semester = findSemesterInYear(pStudent->getListSchoolYearsOfSchool(),nameYear,nameSemester);
+        if(!semester) continue;
+        double other = stod(data[i][2]);
+        double mid = stod(data[i][3]);
+        double final = stod(data[i][4]);
+        double total = stod(data[i][5]);
+        Mark* mark = new Mark(course,other, mid, final, total);
+        addTailMark(semester->getListMarks(),*mark);
+        // Xóa đối tượng Mark cũ nếu có để tránh rò rỉ bộ nhớ
+        tmp = tmp->next;
+    }
+
     deletePointerData(data, numRows);
     return true;
 }
