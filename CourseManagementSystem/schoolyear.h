@@ -17,6 +17,7 @@ public:
     SchoolYear(const string& name);
     string getNameSchoolYear() const;
     LinkedList_Semesters* getListSemesters() const;
+    void deletelistClasses(); // do data của học sinh không cần Class trong SchoolYear nên nếu là Student thì xóa đi
 };
 
 struct NodeSchoolYear {

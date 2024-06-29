@@ -5,6 +5,7 @@ struct LinkedList_SchoolYears;
 struct LinkedList_Semesters;
 struct LinkedList_Courses;
 struct LinkedList_Classes;
+struct Mark;
 class SchoolYear;
 class Semester;
 class Course;
@@ -15,6 +16,7 @@ private:
     string studentID;
     string enrolledClass;
     LinkedList_SchoolYears* dataOfStudents;
+    Mark* markOfCourse; // dành cho học sinh trong khóa học
 public:
     // hàm lấy 1 danh sách môn học của 1 kì thuộc 1 năm học
     LinkedList_Courses* getListCoursesOfASemester(const string& nameYear, const string& nameSemester);
@@ -22,6 +24,10 @@ public:
     Student(string socialID, string studentID,string firstName,string lastName, string enrolledClass, string gender, string dob);
     Student(string* data);
     Student(string* data,const string& nameClass);
+    Mark* getMarks() const;
+    void setEnrollClass(const string& newClass);
+    void setMark();
+    void setMark(Mark* mark);
     string getStudentID() const;
     string getEnrolledClass() const;
     LinkedList_SchoolYears* getListSchoolYearsOfSchool() const;

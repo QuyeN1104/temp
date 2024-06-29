@@ -2,7 +2,7 @@
 #include"library.h"
 
 struct LinkedList_Courses;
-
+struct LinkedList_Marks;
 class Semester {
     friend class Staff;
 private:
@@ -10,6 +10,7 @@ private:
     Date endDate;
     string nameSemester;
     LinkedList_Courses* listCoursesOfSemeter;
+    LinkedList_Marks* marksOfSemester; // dành cho học sinh
 public:
     Semester();
     Semester(Date startDate, Date endDate,string name);
@@ -19,6 +20,8 @@ public:
     Date getEndDate() const;
     string getNameSemester() const;
     LinkedList_Courses* getListCourses() const;
+    LinkedList_Marks* getListMarks() const;
+    void initListMarks(); // cấp phát ô nhớ cho danh sách điểm
 };
 
 struct NodeSemester {

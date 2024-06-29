@@ -1,6 +1,7 @@
 #pragma once
 #include"library.h"
 struct LinkedList_Students;
+struct LinkedList_Marks;
 class Course  {
     friend class Staff;
 private:
@@ -34,4 +35,6 @@ struct LinkedList_Courses {
     NodeCourse *head, *tail;
     LinkedList_Courses();
 };
+
+
 

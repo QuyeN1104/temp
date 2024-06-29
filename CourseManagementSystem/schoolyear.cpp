@@ -31,3 +31,7 @@ string SchoolYear::getNameSchoolYear() const {
 LinkedList_Semesters* SchoolYear::getListSemesters() const{
     return listSemestersOfYear;
 }
+void SchoolYear::deletelistClasses(){
+    delete listClassesOfYear;
+    listClassesOfYear = NULL;
+}

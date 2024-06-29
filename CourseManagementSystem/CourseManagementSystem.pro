@@ -14,6 +14,7 @@ SOURCES += \
     course.cpp \
     main.cpp \
     mainwindow.cpp \
+    mark.cpp \
     staff.cpp \
     student.cpp\
     user.cpp\
@@ -25,6 +26,7 @@ HEADERS += \
     course.h \
     library.h \
     mainwindow.h \
+    mark.h \
     staff.h \
     student.h\
     user.h\

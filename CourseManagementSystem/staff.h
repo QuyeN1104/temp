@@ -8,12 +8,14 @@ class SchoolYear;
 class Class;
 class Student;
 class Semester;
+class Mark;
 
 struct LinkedList_Classes;
 struct LinkedList_SchoolYears;
 struct LinkedList_Courses;
 struct LinkedList_Students;
 struct LinkedList_Semesters;
+struct LinkedList_Marks;
 
 struct NodeStudent;
 struct NodeSchoolYear;
@@ -79,20 +81,28 @@ public:
     //Tìm năm học trong danh sách năm
     SchoolYear* getSchoolYearByName(LinkedList_SchoolYears* lSchoolYears, const string& nameSchoolYear);
 
+    // Hàm thêm học sinh vào khóa học
+    Student* addStudentInCourse(Course* course, Student* newStudent);
+    // Hàm thêm học sinh vào lớp học
+    Student* addStudentInClass(Class* Class, Student* newStudent);
+
+    //
     // các hàm thay đổi thông tin khóa học, lớp, ...
-    void change_idCourse(Course& course,string newIdCourse);
-    void change_nameCourse(Course& course,string newNameCourse);
-    void change_className(Course& course,string newClassName);
-    void change_teacherName(Course& course,string newTeacherName);
-    void change_numCredits(Course& course, int newNumCredits);
-    void change_session(Course& course,string newSession);
-    void change_dayofWeek(Course& course,string newDayofWeek);
-    void change_maxStudents(Course& course,int newMaxStudens);
+    void change_idCourse(Course* course, string newIdCourse);
+    void change_nameCourse(Course* course, string newNameCourse);
+    void change_className(Course* course, string newClassName);
+    void change_teacherName(Course* course, string newTeacherName);
+    void change_numCredits(Course* course, int newNumCredits);
+    void change_session(Course* course, string newSession);
+    void change_dayofWeek(Course* course, string newDayofWeek);
+    void change_maxStudents(Course* course, int newMaxStudents);
 
     // các hàm làm việc vơí file
     int countLines(const string& filename);
     string** processCsvFile(const string& fileDirection, int& numRows);
     void deletePointerData(string** s, int numRows);
+     bool exportCourseCsvFile(Course* course,const string& fileDirect);
+    bool importCourseCsvFile(Course* course, const string& fileName);
     // hàm Course
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course);
     NodeCourse* getNodeCoursePointer(LinkedList_Courses* lCourses, int index);
@@ -152,4 +162,6 @@ public:
     void addAfterSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYearAfter, const SchoolYear& schoolyear);
     void addSchoolYearAtIndex(LinkedList_SchoolYears* lSchoolYears, const SchoolYear& schoolyear, int index);
     void deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
+    //
+    Mark* addTailMark(LinkedList_Marks* lMarks, const Mark& Mark);
 };

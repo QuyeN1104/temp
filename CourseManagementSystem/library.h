@@ -5,9 +5,8 @@
 #include<cstring>
 #include<cstdlib>
 #include<sstream>
-#include<bits/stdc++.h>
 using namespace std;
-#define numCsvCols 7
+#define numCsvCols 6
 #define defaultUserName  "_admin_hcmus";
 #define defaultPassWord  "admin@_-";
 #define defaultPassWordStudent "helloworld"
@@ -21,4 +20,6 @@ Date stringToDate(const string& sDate);
 string dateToString(const Date& date);
 string splitNameClassFromFile(const string& fileDirection);
 string fullNameSchoolYear(string shortNameYear); // trả về năm học đầy đủ từ năm học theo hai số đầu // ex 23->2023-2024
+void splitYearandSemester(const string& nameClass, string& nameYear,string& nameSemester);
 string splitYearandSemesterfromFile(const string& fileDirection, string& nameYear,string& nameSemester); // hàm trả về năm và kì từ mã lớp của một khóa học
+

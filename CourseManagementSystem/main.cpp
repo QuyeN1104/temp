@@ -5,6 +5,7 @@
 #include "semester.h"
 #include "student.h"
 #include "class.h"
+#include"mark.h"
 
 int main() {
     Staff admin;
@@ -18,6 +19,8 @@ int main() {
     cout << admin.loadStudentsInClass(ncl->getListStudents(),"D:/211vtp2b.csv") << endl;
     Course myCourse("CS101", "Introduction to Computer Science", "211vtp2b", "Dr. Smith", 3, "Monday", "Morning");
     Course* course = admin.addTailCourse(semester->getListCourses(),myCourse);
-    cout << admin.loadStudentsInCourse(course->getListStudents(),"D:/211vtp2b.csv");
+    cout << admin.loadStudentsInCourse(course->getListStudents(),"D:/211vtp2b.csv") << endl;
+    Student* id = admin.findStudentByID("21000352");
+    admin.change_className(course,"21KTLT_1");
     return 0;
 }

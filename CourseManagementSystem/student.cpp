@@ -3,25 +3,27 @@
 #include"semester.h"
 #include"course.h"
 #include"class.h"
+#include"mark.h"
 
 LinkedList_Courses* Student::getListCoursesOfASemester(const string& nameYear, const string& nameSemester){
     Semester* semester = findSemesterInYear(nameYear,nameSemester);
     if(!semester) return NULL;
     return semester->getListCourses();
 }
-Student::Student() : User(),studentID(""),enrolledClass("") , dataOfStudents(new LinkedList_SchoolYears()) {}
+Student::Student() : User(),studentID(""),enrolledClass("") , dataOfStudents(new LinkedList_SchoolYears()), markOfCourse(NULL) {}
 
 Student::Student(string* data) {
     int i = 0;
     this->studentID = data[i++];
-    this->lastName = data[i++];
     this->firstName = data[i++];
+    this->lastName = data[i++];
     this->gender = data[i++];
     this->dateOfBirth = stringToDate(data[i++]);
     this->socialID = data[i++];
     this->userName = this->studentID;
     this->passWord = defaultPassWordStudent;
     dataOfStudents = new LinkedList_SchoolYears();
+    markOfCourse = NULL;
 }
 Student::Student(string socialID, string studentID,string firstName,string lastName, string enrolledClass, string gender, string dob){
     this->studentID = studentID;
@@ -34,12 +36,13 @@ Student::Student(string socialID, string studentID,string firstName,string lastN
     this->passWord = defaultPassWordStudent;
     this->enrolledClass = enrolledClass;
     dataOfStudents = new LinkedList_SchoolYears();
+    markOfCourse = NULL;
 }
 Student::Student(string* data,const string& nameClass) {
     int i = 0;
     this->studentID = data[i++];
+    this-> firstName = data[i++];
     this->lastName = data[i++];
-    this->firstName = data[i++];
     this->gender = data[i++];
     this->dateOfBirth = stringToDate(data[i++]);
     this->socialID = data[i++];
@@ -47,6 +50,25 @@ Student::Student(string* data,const string& nameClass) {
     this->passWord = defaultPassWordStudent;
     this->enrolledClass = nameClass;
     dataOfStudents = new LinkedList_SchoolYears();
+    markOfCourse = NULL;
+}
+
+void Student::setEnrollClass(const string& newClass){
+    enrolledClass = newClass;
+}
+
+void Student::setMark(){
+    delete markOfCourse;
+    markOfCourse = new Mark;
+}
+
+void Student::setMark(Mark* mark){
+    delete markOfCourse;
+    markOfCourse = mark;
+}
+
+Mark* Student::getMarks() const{
+    return markOfCourse;
 }
 
 bool Student::operator !=(const Student& other) const{

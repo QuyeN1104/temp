@@ -45,10 +45,14 @@ string fullNameSchoolYear(string shortNameYear){
     string fullName = "20" + shortNameYear.substr(0,2) + "-20" + to_string(stoi(shortNameYear.substr(0,2))+1);
     return fullName;
 }
-string splitYearandSemesterfromFile(const string& fileDirection, string& nameYear,string& nameSemester){
-    string nameClass  = splitNameClassFromFile(fileDirection); // lấy mã lớp ra
+void splitYearandSemester(const string& nameClass, string& nameYear,string& nameSemester){
     nameYear = fullNameSchoolYear(nameClass.substr(0,2));
     nameSemester = nameClass.substr(2,1);
+}
+string splitYearandSemesterfromFile(const string& fileDirection, string& nameYear,string& nameSemester){
+    string nameClass  = splitNameClassFromFile(fileDirection); // lấy mã lớp ra
+    splitYearandSemester(nameClass,nameYear,nameSemester);
     return nameClass;
 }
+
 

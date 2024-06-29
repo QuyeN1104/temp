@@ -5,6 +5,7 @@
 #include"semester.h"
 #include"student.h"
 #include"class.h"
+#include"mark.h"
 
 //khởi tạo giá trị biến static
 LinkedList_SchoolYears* Staff::listSchoolYearsOfSchool = nullptr;
@@ -20,32 +21,54 @@ LinkedList_SchoolYears* Staff::getListSchoolYearsOfSchool() const {
 }
 
 //
-void Staff::change_idCourse(Course& course,string newIdCourse){
-    course.idCourse = newIdCourse;
-}
-void Staff::change_nameCourse(Course& course,string newNameCourse){
-    course.nameCourse = newNameCourse;
-}
-void Staff::change_className(Course& course,string newClassName){
-    course.className = newClassName;
-}
-void Staff::change_teacherName(Course& course,string newTeacherName){
-    course.teacherName = newTeacherName;
-}
-void Staff::change_numCredits(Course& course, int newNumCredits){
-    course.numCredits = newNumCredits;
-}
-void Staff::change_session(Course& course,string newSession){
-    course.session = newSession;
+void Staff::change_idCourse(Course* course, string newIdCourse) {
+    if (course) {
+        course->idCourse = newIdCourse;
+    }
 }
 
-void Staff::change_dayofWeek(Course& course,string newDayofWeek){
-    course.dayofWeek = newDayofWeek;
+void Staff::change_nameCourse(Course* course, string newNameCourse) {
+    if (course) {
+        course->nameCourse = newNameCourse;
+    }
 }
 
-void Staff::change_maxStudents(Course& course,int newMaxStudens){
-    course.maxStudents = newMaxStudens;
+void Staff::change_className(Course* course, string newClassName) {
+    if (course) {
+        course->className = newClassName;
+    }
 }
+
+void Staff::change_teacherName(Course* course, string newTeacherName) {
+    if (course) {
+        course->teacherName = newTeacherName;
+    }
+}
+
+void Staff::change_numCredits(Course* course, int newNumCredits) {
+    if (course) {
+        course->numCredits = newNumCredits;
+    }
+}
+
+void Staff::change_session(Course* course, string newSession) {
+    if (course) {
+        course->session = newSession;
+    }
+}
+
+void Staff::change_dayofWeek(Course* course, string newDayofWeek) {
+    if (course) {
+        course->dayofWeek = newDayofWeek;
+    }
+}
+
+void Staff::change_maxStudents(Course* course, int newMaxStudents) {
+    if (course) {
+        course->maxStudents = newMaxStudents;
+    }
+}
+
 int Staff::countLines(const string& filename) {
     ifstream file;
     file.open(filename,ios::in);
@@ -103,6 +126,67 @@ void Staff::deletePointerData(string** s, int numRows){
     }
     delete [] s;
 }
+
+bool Staff::exportCourseCsvFile(Course* course,const string& fileDirect){
+    string filePath = fileDirect + "/" + course->getClassName() + "_scores.csv";
+    ofstream f;
+    f.open(filePath);
+    if(!f.is_open()){
+        return false;
+    }
+    // đọc header
+    f << "No,StudentID,Student Full Name,Other Mark,Midterm Mark,Final Mark,Total Mark" << endl;
+    int no = 1;
+    if(course == NULL || course->getListStudents() == NULL ) return false;
+    NodeStudent* tmp = course->getListStudents()->head;
+    while(tmp){
+        f<< no << "," << tmp->data.getStudentID() << "," << tmp->data.getFirstName() << " " << tmp->data.getLastName() << ",";
+        if(tmp->data.markOfCourse->otherMark != -1) f << tmp->data.markOfCourse->otherMark;
+        f << ",";
+        if(tmp->data.markOfCourse->midtermMark != -1) f << tmp->data.markOfCourse->otherMark;
+        f << ",";
+        if(tmp->data.markOfCourse->finalMark != -1) f << tmp->data.markOfCourse->otherMark;
+        f << ",";
+        if(tmp->data.markOfCourse->totalMark != -1) f << tmp->data.markOfCourse->otherMark;
+        f<<'\n';
+        no++;
+        tmp = tmp->next;
+    }
+    f.close();
+    return true;
+}
+bool Staff::importCourseCsvFile(Course* course, const string& fileName) {
+    if (course == NULL) return false;
+
+    string nameClass = course->getClassName();
+    string nameYear = fullNameSchoolYear(nameClass.substr(0, 2));
+    string nameSemester = nameClass.substr(2, 1);
+    int numRows;
+    string** data = processCsvFile(fileName, numRows);
+
+    if (!data) return false;
+
+    NodeStudent* tmp = course->getListStudents()->head;
+    for (int i = 0; i < numRows; i++) {
+        if (!tmp) break;  // Kiểm tra nếu danh sách rỗng hoặc đã hết sinh viên
+
+        double other = stod(data[i][2]);
+        double mid = stod(data[i][3]);
+        double final = stod(data[i][4]);
+        double total = stod(data[i][5]);
+        Mark* mark = new Mark(other, mid, final, total);
+
+        // Xóa đối tượng Mark cũ nếu có để tránh rò rỉ bộ nhớ
+        delete tmp->data.markOfCourse;
+        tmp->data.markOfCourse = mark;
+        tmp = tmp->next;
+    }
+    deletePointerData(data, numRows);
+    return true;
+}
+
+
+
 // fileDirection ex : 23CTT5.csv
 bool Staff::loadStudentsInClass(LinkedList_Students* lStudents ,const string& fileDirection){
     bool loaded = false;
@@ -120,6 +204,15 @@ bool Staff::loadStudentsInClass(LinkedList_Students* lStudents ,const string& fi
     return loaded;
 }
 
+Student* Staff::addStudentInClass(Class* Class, Student* newStudent){
+    if(Class == NULL || newStudent == NULL) return NULL;
+    // lấy enrolledClass từ Class cho học sinh
+    newStudent->setEnrollClass(Class->getNameClass());
+    // thêm học sinh đó vào lớp
+    Student* student = addTailStudent(Class->getListStudents(),*newStudent);
+    return student;
+}
+
 bool Staff::loadStudentsInCourse(LinkedList_Students* lStudents, const string& fileDirection){
     string nameYear = "", nameSemester = "";
     string nameClass = splitYearandSemesterfromFile(fileDirection,nameYear,nameSemester);
@@ -133,17 +226,20 @@ bool Staff::loadStudentsInCourse(LinkedList_Students* lStudents, const string& f
         Student* student = findStudentByID(data[i][0]); // mssv được lưu trường đầu tiên trong data
         if(student == NULL) continue; // không có học sinh này trong trường
         // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
-        student = addTailStudent(lStudents,*student);
+        Student* studentInCourse = addTailStudent(lStudents,*student);
+        studentInCourse->setMark(); // tạo ô nhớ cho điểm của môn học đó
         // thêm khóa học đó vào danh sách của học sinh
         // kiểm tra năm học đó có tồn tại không
         SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
         // nếu chưa tồn tại năm học đó
         if(year == NULL) {
             year = addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
+            year->deletelistClasses();
         }
         Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
         if(semester == NULL){
             semester = addTailSemester(year->getListSemesters(),nameSemester);
+            semester->initListMarks(); // cấp phát ô nhớ
         }
         // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
         addTailCourse(semester->getListCourses(),*course);
@@ -152,7 +248,34 @@ bool Staff::loadStudentsInCourse(LinkedList_Students* lStudents, const string& f
     deletePointerData(data,numRows);
     return loaded;
 }
-
+Student* Staff::addStudentInCourse(Course* course, Student* newStudent){
+    Student* student = findStudentByID(newStudent->getStudentID());
+    if(student == NULL) return NULL;
+    if(course == NULL || newStudent == NULL) return NULL;
+    string nameClass = course->getClassName();
+    string nameYear = fullNameSchoolYear(nameClass.substr(0,2));
+    string nameSemester = nameClass.substr(2,1);
+        // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
+    Student* studentInCourse = addTailStudent(course->getListStudents(),*newStudent);
+    if(!studentInCourse) return NULL;
+        studentInCourse->setMark(); // tạo ô nhớ cho điểm của môn học đó
+        // thêm khóa học đó vào danh sách của học sinh
+        // kiểm tra năm học đó có tồn tại không
+        SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
+        // nếu chưa tồn tại năm học đó
+        if(year == NULL) {
+            year = addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
+            year->deletelistClasses();
+        }
+        Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
+        if(semester == NULL){
+            semester = addTailSemester(year->getListSemesters(),nameSemester);
+            semester->initListMarks(); // cấp phát ô nhớ
+        }
+        // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
+         addTailCourse(semester->getListCourses(),*course);
+    return studentInCourse;
+}
 // hàm cho Course
 
 NodeCourse* Staff::getNodeCoursePointer(LinkedList_Courses* lCourses, const Course& course){
@@ -376,7 +499,7 @@ Student* Staff::addTailStudent(LinkedList_Students* lStudents, const Student& st
     }
     else lStudents->tail->next = pNodeStudent;
     lStudents->tail = pNodeStudent;
-    return &pNodeStudent->data;
+    return &(pNodeStudent->data);
 }
 
 void Staff::addBeforeStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStudentBefore, const Student& student){
@@ -969,4 +1092,15 @@ Student* Staff::IsStudent(const string& userName,const string& passWord){
     if(student == NULL) return NULL;
     if(student->getPassWord() == passWord) return student;
     return NULL;
+}
+
+Mark* Staff::addTailMark(LinkedList_Marks* lMarks, const Mark& Mark) {
+    NodeMark* pNodeMark = new NodeMark(Mark);
+    if (pNodeMark == NULL || lMarks == NULL) return NULL;
+    if (lMarks->tail == NULL) {
+        lMarks->head = pNodeMark;
+    }
+    else lMarks->tail->next = pNodeMark;
+    lMarks->tail = pNodeMark;
+    return &pNodeMark->data;
 }
