@@ -86,6 +86,12 @@ public:
     // Hàm thêm học sinh vào lớp học
     Student* addStudentInClass(Class* Class, Student* newStudent);
 
+    // xóa 1 học sinh khỏi lớp học
+    void deleteStudentFromCourse(Course* course, const string& mssv);
+
+    // xóa lớp học
+    void deleteCourse(LinkedList_Courses* lCourses, Course* course);
+
     //
     // các hàm thay đổi thông tin khóa học, lớp, ...
     void setCourse(Course* course,string id, string name, string className, string teacherName, int numCredits,
@@ -119,6 +125,7 @@ public:
     void deleteCourse(LinkedList_Courses* lCourses, NodeCourse* pNodeCourse);
     // hàm cho Student
     NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, const Student& student);
+    NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, const string& mssv);
     NodeStudent* getNodeStudentPointer(LinkedList_Students* lStudents, int index);
     int getNodeStudentIndex(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);
     NodeStudent* getPreviousNodeStudentPointer(LinkedList_Students* lStudents, NodeStudent* pNodeStudent);

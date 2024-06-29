@@ -279,6 +279,48 @@ bool Staff::loadStudentsInClass(LinkedList_Students* lStudents ,const string& fi
     return loaded;
 }
 
+void Staff::deleteStudentFromCourse(Course* course, const string& mssv){
+    NodeStudent* pStudent = getNodeStudentPointer(course->getListStudents(),mssv);
+    if(pStudent == NULL) return;
+    deleteStudent(course->getListStudents(),pStudent);
+    // xóa khóa học khỏi ds của hs
+    string nameYear,nameSemester;
+    splitYearandSemester(course->getClassName(),nameYear,nameSemester);
+    LinkedList_Courses* lCourses = listCourseOfStudent(mssv,nameYear,nameSemester);
+    if(lCourses == NULL) return;
+    Course* pCourse = getCourseByName(lCourses,course->getClassName());
+    if(pCourse == NULL) return;
+    deleteCourse(lCourses,getNodeCoursePointer(lCourses,*pCourse));
+}
+
+void Staff::deleteCourse(LinkedList_Courses* lCourses, Course* course){
+    if(course == NULL || lCourses == NULL) return;
+    if(course->listStudentsOfCourse){
+        NodeStudent* pStudent = course->getListStudents()->head;
+        // xóa khóa học ra khỏi ds học sinh
+        while(pStudent){
+            string nameYear,nameSemester;
+            splitYearandSemester(course->getClassName(),nameYear,nameSemester);
+            LinkedList_Courses* lCourses = listCourseOfStudent(pStudent->data.getStudentID(),nameYear,nameSemester);
+            if(lCourses == NULL) continue;
+            Course* pCourse = getCourseByName(lCourses,course->getClassName());
+            if(pCourse == NULL) continue;
+            deleteCourse(lCourses,getNodeCoursePointer(lCourses,*pCourse));
+            pStudent = pStudent->next;
+        }
+        pStudent = course->getListStudents()->head;
+        while(pStudent){
+            NodeStudent* tmp = pStudent;
+            pStudent = pStudent->next;
+            delete tmp;
+        }
+        delete course->getListStudents();
+    }
+    // delete course;
+    // xóa course ra khỏi danh sách
+    deleteCourse(lCourses,getNodeCoursePointer(lCourses,*course));
+}
+
 Student* Staff::addStudentInClass(Class* Class, Student* newStudent){
     if(Class == NULL || newStudent == NULL) return NULL;
     // lấy enrolledClass từ Class cho học sinh
@@ -522,6 +564,15 @@ NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, const 
     return pNodeStudent;
 }
 
+NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, const string& mssv){
+    if(lStudents == NULL || lStudents->head == NULL ) return NULL;
+    NodeStudent* pNodeStudent = lStudents->head;
+    while(pNodeStudent != NULL && (pNodeStudent->data.getStudentID() != mssv)){
+        pNodeStudent = pNodeStudent->next;
+    }
+    return pNodeStudent;
+}
+
 NodeStudent* Staff::getNodeStudentPointer(LinkedList_Students* lStudents, int index){
     NodeStudent* pNodeStudent = lStudents->head;
     int currentIndex = 0;
@@ -634,7 +685,7 @@ void Staff::deleteStudent(LinkedList_Students* lStudents, NodeStudent* pNodeStud
         return;
     }
 
-    // Nếu khóa học cần xóa là cuối danh sách
+    // Nếu học sinh cần xóa là cuối danh sách
     if (temp == lStudents->tail) {
         lStudents->tail = prev;
         lStudents->tail->next = NULL;

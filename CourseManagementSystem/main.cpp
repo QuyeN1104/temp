@@ -20,10 +20,6 @@ int main() {
     Course myCourse("CS101", "Introduction to Computer Science", "211vtp2b", "Dr. Smith", 3, "Monday", "Morning");
     Course* course = admin.addTailCourse(semester->getListCourses(),myCourse);
     cout << admin.loadStudentsInCourse(course->getListStudents(),"D:/211vtp2b.csv") << endl;
-    cout << admin.importCourseCsvFile(course,"D:/211vtp2b_scores.csv") << endl;
-    Student* id = admin.findStudentByID("21000352");
-    admin.setCourse(course,"dad","211vtp2b","21112","d",3,"wda","2q");
-    cout << course->getDayofWeek();
-    cout << id->getListSchoolYearsOfSchool()->head->data.getListSemesters()->head->data.getListCourses()->head->data.getDayofWeek();
+    admin.deleteCourse(semester->getListCourses(),course);
     return 0;
 }
