@@ -59,7 +59,7 @@ void Student::setEnrollClass(const string& newClass){
 
 void Student::setMark(){
     delete markOfCourse;
-    markOfCourse = new Mark;
+    markOfCourse = new Mark();
 }
 
 void Student::setMark(Mark* mark){
@@ -114,29 +114,38 @@ double Student::getGPAOfSemester (double& allGpa,double &allCredits,Semester* se
     if(semester == NULL) return -1;
     if(semester->getListMarks() == NULL) return -2;
     NodeMark* tmp = semester->getListMarks()->head;
-     allGpa = 0, allCredits = 0;
+    allGpa = 0, allCredits = 0;
     while(tmp){
-        allGpa+=tmp->data.totalMark;
-        allCredits+=tmp->data.course->getNumCredits();
+        double tmp1 = tmp->data.totalMark*tmp->data.course->getNumCredits();
+        double tmp2 = tmp->data.course->getNumCredits();
+        if(tmp1 && tmp2){
+            allGpa+=tmp1;
+            allCredits+=tmp2;
+        }
         tmp = tmp->next;
     }
+    if(allCredits == 0) return -1;
     double all = allGpa/allCredits;
     return all;
 }
 double Student::getAllGPA(){
     double allscore = 0, allCredits = 0;
+    if(getListSchoolYearsOfSchool() == NULL) return -1;
     NodeSchoolYear* year = getListSchoolYearsOfSchool()->head;
     while(year){
         NodeSemester* semester = year->data.getListSemesters()->head;
         while(semester){
-           double curgpa, curCredits;
-            getGPAOfSemester(curgpa,curCredits,&semester->data);
-           allscore+=curgpa;
-            allCredits+=curCredits;
-           semester = semester->next;
+            double curgpa, curCredits;
+            double res =  getGPAOfSemester(curgpa,curCredits,&semester->data); // kết quả của từng kì
+            if(res >= 0){
+                allscore+=curgpa;
+                allCredits+=curCredits;
+            }
+            semester = semester->next;
         }
         year = year->next;
     }
+    if(allCredits == 0) return -1;
     return allscore/allCredits;
 }
 

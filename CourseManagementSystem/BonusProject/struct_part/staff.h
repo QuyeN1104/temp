@@ -22,10 +22,11 @@ struct NodeSchoolYear;
 struct NodeSemester;
 struct NodeClass;
 struct NodeCourse;
+struct NodeMark;
 
 class Staff : public User {
 private:
-     static LinkedList_SchoolYears* listSchoolYearsOfSchool;
+    static LinkedList_SchoolYears* listSchoolYearsOfSchool;
 public:
     // các hàm getter
     Staff();
@@ -95,7 +96,7 @@ public:
     //
     // các hàm thay đổi thông tin khóa học, lớp, ...
     void setCourse(Course* course,string id, string name, string className, string teacherName, int numCredits,
-        string dayofWeek, string session);
+                   string dayofWeek, string session);
     void change_idCourse(Course* course, string newIdCourse);
     void change_nameCourse(Course* course, string newNameCourse);
     void change_className(Course* course, string newClassName);
@@ -174,4 +175,6 @@ public:
     void deleteSchoolYear(LinkedList_SchoolYears* lSchoolYears, NodeSchoolYear* pNodeSchoolYear);
     //
     Mark* addTailMark(LinkedList_Marks* lMarks, const Mark& Mark);
+    NodeMark* getNodeMarkPointer(LinkedList_Marks* lMarks,Course* course);
+    void deleteMark(LinkedList_Marks* lMarks, NodeMark* pNodeMark);
 };

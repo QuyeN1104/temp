@@ -23,22 +23,36 @@ LinkedList_SchoolYears* Staff::getListSchoolYearsOfSchool() const {
 //
 
 void Staff::setCourse(Course* course,string id, string name, string className, string teacherName, int numCredits,
-                string dayofWeek, string session){
+                      string dayofWeek, string session){
     if(course){
         Course* newCourse = new Course(id,name,className,teacherName,numCredits,dayofWeek,session);
         string nameClass = course->getClassName();
         string nameYear, nameSemester;
         splitYearandSemester(nameClass,nameYear,nameSemester);
+        // thay đổi khoa học trong ds khóa học của hs
         NodeStudent* tmp = course->getListStudents()->head;
         while(tmp){
             Student* st = &(tmp->data);
             Course* pCourse = st->findCourseByClassName(nameYear,nameSemester,nameClass);
             if(pCourse){
-                *pCourse = *newCourse;
+                pCourse->className = newCourse->getClassName();
+                pCourse->dayofWeek = newCourse->getDayofWeek();
+                pCourse->idCourse = newCourse->getIdCourse();
+                pCourse->nameCourse = newCourse->getNameCourse();
+                pCourse->numCredits = newCourse->getNumCredits();
+                pCourse->session = newCourse->getSession();
+                pCourse->teacherName = newCourse->getTeacherName();
             }
             tmp = tmp->next;
         }
-        *course = *newCourse;
+        // thay doi khóa học
+        course->className = newCourse->getClassName();
+        course->dayofWeek = newCourse->getDayofWeek();
+        course->idCourse = newCourse->getIdCourse();
+        course->nameCourse = newCourse->getNameCourse();
+        course->numCredits = newCourse->getNumCredits();
+        course->session = newCourse->getSession();
+        course->teacherName = newCourse->getTeacherName();
         delete newCourse;
     }
 }
@@ -165,8 +179,8 @@ string** Staff::processCsvFile(const string& fileDirection, int& numRows){
         int isSTT = 1; // kiểm tra có phải là cột stt không (do không đọc số thứ tự)
         while (getline(ss, cell, ',')) {
             if(isSTT == 0){
-            pString[row][col] = cell;
-            ++col;
+                pString[row][col] = cell;
+                ++col;
             }
             isSTT = 0;
         }
@@ -239,7 +253,7 @@ bool Staff::importCourseCsvFile(Course* course, const string& fileName) {
         tmp->data.markOfCourse = mark;
         tmp = tmp->next;
     }
-     tmp = course->getListStudents()->head;
+    tmp = course->getListStudents()->head;
     for (int i = 0; i < numRows; i++) {
         if (!tmp) break;  // Kiểm tra nếu danh sách rỗng hoặc đã hết sinh viên
         Student* pStudent = findStudentByID(data[i][0]);
@@ -282,30 +296,52 @@ bool Staff::loadStudentsInClass(LinkedList_Students* lStudents ,const string& fi
 void Staff::deleteStudentFromCourse(Course* course, const string& mssv){
     NodeStudent* pStudent = getNodeStudentPointer(course->getListStudents(),mssv);
     if(pStudent == NULL) return;
+    delete pStudent->data.markOfCourse;
+    // pStudent->data.markOfCourse = NULL;
     deleteStudent(course->getListStudents(),pStudent);
     // xóa khóa học khỏi ds của hs
     string nameYear,nameSemester;
     splitYearandSemester(course->getClassName(),nameYear,nameSemester);
-    LinkedList_Courses* lCourses = listCourseOfStudent(mssv,nameYear,nameSemester);
+    Student* st = findStudentByID(mssv);
+    if(!st) return;
+    Semester* semester = findSemesterInYear(st->getListSchoolYearsOfSchool(),nameYear,nameSemester);
+    if(!semester) return;
+    LinkedList_Courses* lCourses = semester->getListCourses();
     if(lCourses == NULL) return;
-    Course* pCourse = getCourseByName(lCourses,course->getClassName());
+    // Course* pCourse = getCourseByName(lCourses,course->getClassName());
+    NodeCourse* pCourse = getNodeCoursePointer(lCourses,*course);
     if(pCourse == NULL) return;
-    deleteCourse(lCourses,getNodeCoursePointer(lCourses,*pCourse));
+    deleteCourse(lCourses,pCourse);
+    // xóa ds điểm của khóa học đó
+    LinkedList_Marks* lMarks = semester->getListMarks();
+    NodeMark* pMark = getNodeMarkPointer(lMarks,course);
+    if(!pMark) return;
+    deleteMark(lMarks,pMark);
 }
 
 void Staff::deleteCourse(LinkedList_Courses* lCourses, Course* course){
     if(course == NULL || lCourses == NULL) return;
     if(course->listStudentsOfCourse){
         NodeStudent* pStudent = course->getListStudents()->head;
-        // xóa khóa học ra khỏi ds học sinh
+        // xóa khóa học ra khỏi ds của học sinh
         while(pStudent){
             string nameYear,nameSemester;
             splitYearandSemester(course->getClassName(),nameYear,nameSemester);
-            LinkedList_Courses* lCourses = listCourseOfStudent(pStudent->data.getStudentID(),nameYear,nameSemester);
-            if(lCourses == NULL) continue;
-            Course* pCourse = getCourseByName(lCourses,course->getClassName());
-            if(pCourse == NULL) continue;
-            deleteCourse(lCourses,getNodeCoursePointer(lCourses,*pCourse));
+            Student* st = findStudentByID(pStudent->data.getStudentID());
+            if(!st) return;
+            Semester* semester = findSemesterInYear(st->getListSchoolYearsOfSchool(),nameYear,nameSemester);
+            if(!semester) return;
+            LinkedList_Courses* lCourses = semester->getListCourses();
+            if(lCourses == NULL) return;
+            // Course* pCourse = getCourseByName(lCourses,course->getClassName());
+            NodeCourse* pCourse = getNodeCoursePointer(lCourses,*course);
+            if(pCourse == NULL) return;
+            deleteCourse(lCourses,pCourse);
+            // xóa ds điểm của khóa học đó
+            LinkedList_Marks* lMarks = semester->getListMarks();
+            NodeMark* pMark = getNodeMarkPointer(lMarks,course);
+            if(!pMark) return;
+            deleteMark(lMarks,pMark);
             pStudent = pStudent->next;
         }
         pStudent = course->getListStudents()->head;
@@ -318,7 +354,10 @@ void Staff::deleteCourse(LinkedList_Courses* lCourses, Course* course){
     }
     // delete course;
     // xóa course ra khỏi danh sách
-    deleteCourse(lCourses,getNodeCoursePointer(lCourses,*course));
+    NodeCourse* pCourse = getNodeCoursePointer(lCourses,*course);
+    if(pCourse == NULL) return;
+    deleteCourse(lCourses,pCourse);
+
 }
 
 Student* Staff::addStudentInClass(Class* Class, Student* newStudent){
@@ -375,22 +414,22 @@ Student* Staff::addStudentInCourse(Course* course, Student* newStudent){
         // thêm học sinh đó vào danh sách học sinh của khóa học (sau có thể thêm điều kiện ràng buộc vào)
     Student* studentInCourse = addTailStudent(course->getListStudents(),*newStudent);
     if(!studentInCourse) return NULL;
-        studentInCourse->setMark(); // tạo ô nhớ cho điểm của môn học đó
-        // thêm khóa học đó vào danh sách của học sinh
-        // kiểm tra năm học đó có tồn tại không
-        SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
-        // nếu chưa tồn tại năm học đó
-        if(year == NULL) {
-            year = addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
-            year->deletelistClasses();
-        }
-        Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
-        if(semester == NULL){
-            semester = addTailSemester(year->getListSemesters(),nameSemester);
-            semester->initListMarks(); // cấp phát ô nhớ
-        }
-        // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
-         addTailCourse(semester->getListCourses(),*course);
+    studentInCourse->setMark(); // tạo ô nhớ cho điểm của môn học đó
+    // thêm khóa học đó vào danh sách của học sinh
+    // kiểm tra năm học đó có tồn tại không
+    SchoolYear* year = getSchoolYearByName(student->getListSchoolYearsOfSchool(),nameYear);
+    // nếu chưa tồn tại năm học đó
+    if(year == NULL) {
+        year = addTailSchoolYear(student->getListSchoolYearsOfSchool(),nameYear);
+        year->deletelistClasses();
+    }
+    Semester* semester = getSemesterByName(year->getListSemesters(),nameSemester);
+    if(semester == NULL){
+        semester = addTailSemester(year->getListSemesters(),nameSemester);
+        semester->initListMarks(); // cấp phát ô nhớ
+    }
+    // Thêm khóa học vào đúng năm học và kì học đó cho sinh viên
+    addTailCourse(semester->getListCourses(),*course);
     return studentInCourse;
 }
 // hàm cho Course
@@ -454,9 +493,9 @@ NodeCourse* Staff::getPreviousNodeCoursePointer(LinkedList_Courses* lCourses, No
 void Staff::addHeadCourse(LinkedList_Courses* lCourses, const Course& course){
     NodeCourse* pNodeCourse = new NodeCourse(course);
     if(pNodeCourse){
-    pNodeCourse->next = lCourses->head;
-    lCourses->head = pNodeCourse;
-    if(lCourses->tail == NULL) lCourses->tail = lCourses->head;
+        pNodeCourse->next = lCourses->head;
+        lCourses->head = pNodeCourse;
+        if(lCourses->tail == NULL) lCourses->tail = lCourses->head;
     }
 }
 
@@ -1229,4 +1268,50 @@ Mark* Staff::addTailMark(LinkedList_Marks* lMarks, const Mark& Mark) {
     else lMarks->tail->next = pNodeMark;
     lMarks->tail = pNodeMark;
     return &pNodeMark->data;
+}
+NodeMark* Staff::getNodeMarkPointer(LinkedList_Marks* lMarks,Course* course){
+    if (lMarks->head == NULL) return NULL;
+    NodeMark* pNodeMark = lMarks->head;
+    while (pNodeMark != NULL && (pNodeMark->data.course->getClassName() != course->getClassName())) {
+        pNodeMark = pNodeMark->next;
+    }
+    return pNodeMark;
+}
+void Staff::deleteMark(LinkedList_Marks* lMarks, NodeMark* pNodeMark) {
+    if (lMarks->head == NULL) return; // Danh sách trống
+
+    NodeMark* temp = lMarks->head;
+    NodeMark* prev = NULL;
+
+    // Tìm nút chứa khóa học cần xóa
+    while (temp != NULL) {
+        if (temp == pNodeMark) break;
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // Nếu không tìm thấy khóa học cần xóa
+    if (temp == NULL) return;
+
+    // Nếu khóa học cần xóa là đầu danh sách
+    if (temp == lMarks->head) {
+        lMarks->head = temp->next;
+        if (lMarks->head == NULL) {
+            lMarks->tail = NULL; // Nếu danh sách trống sau khi xóa
+        }
+        delete temp;
+        return;
+    }
+
+    // Nếu khóa học cần xóa là cuối danh sách
+    if (temp == lMarks->tail) {
+        lMarks->tail = prev;
+        lMarks->tail->next = NULL;
+        delete temp;
+        return;
+    }
+
+    // Xóa khóa học ở giữa danh sách
+    prev->next = temp->next;
+    delete temp;
 }
