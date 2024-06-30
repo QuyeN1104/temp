@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/background"/>
+    <qresource prefix="/">
+        <file>icon/Logo.png</file>
+        <file>icon/settingIcon.png</file>
+        <file>icon/passwordIcon.png</file>
+        <file>icon/usernameIcon.png</file>
+        <file>icon/backIcon.png</file>
+        <file>background/KHTN.jpg</file>
+        <file>background/UWU.gif</file>
+        <file>background/KHTN (2).jpg</file>
+        <file>background/hcmusthumb.jpg</file>
+        <file>background/hcmus_linh_trung.jpg</file>
+        <file>background/hcmusthumb().jpg</file>
+    </qresource>
+</RCC>
