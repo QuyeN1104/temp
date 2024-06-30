@@ -59,7 +59,7 @@ ScoreBoard::ScoreBoard(Student* st, string year, string semester) : QWidget() {
     form->addRow("Điểm trung bình: ", label2);
     line->addStretch(1);
     line->addLayout(form);
-    line->addStretch();
+    line->addStretch(1);
 
 
     // Thiết lập layout chính và thêm khu vực cuộn vào layout

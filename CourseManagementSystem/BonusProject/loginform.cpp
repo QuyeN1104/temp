@@ -4,8 +4,8 @@
 
 LoginForm::LoginForm() : QLabel(){
     admin = new Staff();
-    admin->setUserName("");
-    admin->setPassWord("");
+    admin->setUserName("_staff_hcmus_");
+    admin->setPassWord("hcmus@@@");
 
     regionLogin = new QLabel(this);
     regionLoginLayout = new QVBoxLayout(this);
